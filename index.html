@@ -218,6 +218,39 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
 .chat-input button{width:46px;height:46px;border-radius:50%;border:none;background:var(--ai);color:#fff;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .chat-input button svg{width:19px;height:19px;fill:#fff}
 
+/* ================= AI interpretation & actions ================= */
+.interp{
+  margin-top:13px;padding:11px 13px;border-radius:13px;
+  background:var(--ai-soft);border:1px solid #DDD9F5;
+  font-size:12.5px;line-height:1.55;color:#3E3880;
+}
+.interp .tag{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ai);margin-bottom:5px}
+.card-actions{display:flex;gap:16px;margin-top:12px;padding-top:11px;border-top:1px solid rgba(93,83,199,.16)}
+.card-actions.plain{border-top:1px solid var(--line)}
+.link-btn{background:none;border:none;cursor:pointer;font-family:var(--font-body);font-size:12.5px;font-weight:600;color:var(--ai);padding:0;display:inline-flex;align-items:center;gap:5px}
+.link-btn.pine{color:var(--pine)}
+.prep{display:none;margin-top:12px;padding:12px 14px;border-radius:13px;background:var(--ai-soft);border:1px solid #DDD9F5}
+.prep.show{display:block;animation:rise .3s ease}
+.prep .tag{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ai);margin-bottom:7px}
+.prep ul{list-style:none}
+.prep li{font-size:12.5px;line-height:1.5;color:#3E3880;padding:4px 0 4px 16px;position:relative}
+.prep li::before{content:"•";position:absolute;left:2px;color:var(--ai)}
+.prep .src{font-size:10.5px;color:var(--ink-soft);margin-top:7px}
+
+/* ================= timeline filters & insights ================= */
+.filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:14px;margin:-4px 0 8px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filters button{
+  flex-shrink:0;border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+  font-family:var(--font-body);font-size:12px;font-weight:600;
+  padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;
+}
+.filters button.active{background:var(--pine);border-color:var(--pine);color:#fff}
+.event.is-insight::before{border-color:var(--ai);background:var(--ai-soft)}
+.event.is-insight .card{border-color:#DDD9F5;background:linear-gradient(180deg,#FBFAFF,#F3F1FC)}
+.event.is-insight p{font-size:12.5px;line-height:1.55;color:#3E3880;margin-top:2px}
+.event.hidden{display:none}
+
 /* ================= desktop ================= */
 @media (min-width:1024px){
   .sidenav{
@@ -267,7 +300,7 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
     <button data-scr="trends" onclick="go('trends')"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Trends</button>
     <button data-scr="diary" onclick="go('diary')"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Symptom diary</button>
     <button data-scr="id" onclick="go('id')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M13 9h5M13 13h5M5.5 16.5c.8-1.2 1.8-1.8 3-1.8s2.2.6 3 1.8"/></svg>Emergency ID</button>
-    <div class="side-foot">Diya · Patient<br>CliniSync prototype v2</div>
+    <div class="side-foot">Ama Owusu · Patient<br>CliniSync prototype v2</div>
   </aside>
 
   <main class="main">
@@ -278,9 +311,9 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
         <div class="home-head">
           <div>
             <div class="eyebrow">Thursday, 16 July</div>
-            <h1>Good morning,<br>Diya</h1>
+            <h1>Good morning,<br>Ama</h1>
           </div>
-          <div class="avatar">DU</div>
+          <div class="avatar">AO</div>
         </div>
 
         <div class="grid-2">
@@ -289,15 +322,34 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
             <p><b>Your last visit, explained simply.</b><br>
             Dr. Mensah increased your metformin to help bring your blood sugar closer to target. Nothing urgent was found. You'll repeat the HbA1c blood test before your next review in October.</p>
             <div class="ai-review"><span class="dot-ok"></span> Reviewed and approved by your care team</div>
+            <div class="card-actions">
+              <button class="link-btn" onclick="explainMore()">✦ Explain more</button>
+              <button class="link-btn" onclick="go('thread');toast('Showing your full record')">View full report →</button>
+            </div>
           </div>
 
           <div>
             <h2>Next appointment</h2>
-            <div class="card appt">
-              <div class="appt-date"><span class="d">09</span><span class="m">Oct</span></div>
-              <div>
-                <h3>Endocrinology review</h3>
-                <div class="muted">Dr. K. Mensah · Korle-Bu Teaching Hospital<br><span class="data" style="font-size:12px">10:30 AM</span> · Reminder set</div>
+            <div class="card">
+              <div class="appt">
+                <div class="appt-date"><span class="d">09</span><span class="m">Oct</span></div>
+                <div>
+                  <h3>Endocrinology review</h3>
+                  <div class="muted">Dr. K. Mensah · Korle-Bu Teaching Hospital<br><span class="data" style="font-size:12px">10:30 AM</span> · Reminder set</div>
+                </div>
+              </div>
+              <div class="card-actions plain">
+                <button class="link-btn pine" onclick="togglePrep()" id="prepbtn">✦ Prepare for appointment</button>
+              </div>
+              <div class="prep" id="prep">
+                <div class="tag">✦ Suggested topics for Dr. Mensah</div>
+                <ul>
+                  <li>Ask about your rising HbA1c and what your new target plan is</li>
+                  <li>Discuss how the increased metformin dose has been working</li>
+                  <li>Mention the fatigue you've logged since June</li>
+                  <li>Confirm when to repeat your blood tests</li>
+                </ul>
+                <div class="src">Generated from your record · Discussion prompts, not medical advice</div>
               </div>
             </div>
           </div>
@@ -336,8 +388,17 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
         <h1>One connected timeline</h1>
         <p class="lede">Every visit, test and prescription — from every provider — in one thread.</p>
 
+        <div class="filters" id="filters">
+          <button class="active" data-f="all">All</button>
+          <button data-f="consult">Consultations</button>
+          <button data-f="lab">Laboratory</button>
+          <button data-f="rx">Medication</button>
+          <button data-f="imaging">Imaging</button>
+          <button data-f="hospital">Hospital visits</button>
+        </div>
+
         <div class="thread">
-          <div class="event is-lab">
+          <div class="event is-lab" data-cat="lab">
             <div class="card">
               <div class="event-top"><span class="chip lab">Lab result</span><span class="event-date">02 Jul 2026</span></div>
               <h3>HbA1c — 7.4%</h3>
@@ -345,7 +406,13 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
               <div class="event-provider">◈ MDS-Lancet Laboratories, Accra</div>
             </div>
           </div>
-          <div class="event is-consult">
+          <div class="event is-insight" data-cat="insight">
+            <div class="card">
+              <div class="event-top"><span class="chip ai">✦ AI pattern</span></div>
+              <p>Your HbA1c has gradually increased over the past 12 months. This trend has been shared with your care team ahead of your October review.</p>
+            </div>
+          </div>
+          <div class="event is-consult" data-cat="consult hospital">
             <div class="card">
               <div class="event-top"><span class="chip consult">Consultation</span><span class="event-date">28 Jun 2026</span></div>
               <h3>Diabetes review</h3>
@@ -353,7 +420,7 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
               <div class="event-provider">◈ Dr. K. Mensah · Korle-Bu Teaching Hospital</div>
             </div>
           </div>
-          <div class="event is-rx">
+          <div class="event is-rx" data-cat="rx">
             <div class="card">
               <div class="event-top"><span class="chip rx">Prescription</span><span class="event-date">28 Jun 2026</span></div>
               <h3>Metformin 1000 mg</h3>
@@ -361,7 +428,13 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
               <div class="event-provider">◈ Ernest Chemists, Osu</div>
             </div>
           </div>
-          <div class="event is-consult">
+          <div class="event is-insight" data-cat="insight">
+            <div class="card">
+              <div class="event-top"><span class="chip ai">✦ AI observation</span></div>
+              <p>Medication dosage was increased after laboratory trends suggested worsening glucose control. Your clinician made this change at your June review.</p>
+            </div>
+          </div>
+          <div class="event is-consult" data-cat="consult imaging">
             <div class="card">
               <div class="event-top"><span class="chip consult">Consultation</span><span class="event-date">14 May 2026</span></div>
               <h3>Eye screening — normal</h3>
@@ -369,7 +442,7 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
               <div class="event-provider">◈ Emmanuel Eye Centre, Accra</div>
             </div>
           </div>
-          <div class="event is-lab">
+          <div class="event is-lab" data-cat="lab">
             <div class="card">
               <div class="event-top"><span class="chip lab">Lab result</span><span class="event-date">03 Mar 2026</span></div>
               <h3>Lipid panel — improved</h3>
@@ -412,6 +485,10 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
             </svg>
             <div class="chart-labels"><span>Feb 25</span><span>Jun 25</span><span>Oct 25</span><span>Feb 26</span><span>Jul 26</span></div>
             <div class="range-note">Latest: <b class="data">7.4%</b> · Target: <b class="data">≤ 7.0%</b> · Source: 4 laboratories</div>
+            <div class="interp">
+              <div class="tag">✦ What this means</div>
+              Your HbA1c is slightly above your target. Although it has increased by 0.3% since January, your clinician has already scheduled a review in October. No urgent action is currently required.
+            </div>
           </div>
 
           <div class="card">
@@ -428,6 +505,10 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
               <circle cx="330" cy="82" r="5" fill="#fff" stroke="#0E6E5C" stroke-width="2.5"/>
             </svg>
             <div class="chart-labels"><span>Jul 25</span><span>Nov 25</span><span>Mar 26</span><span>Jul 26</span></div>
+            <div class="interp">
+              <div class="tag">✦ What this means</div>
+              Your cholesterol is moving in the right direction. It has fallen steadily since you started atorvastatin and is now within a healthy range. Keep taking it as scheduled — it's working.
+            </div>
           </div>
 
           <div class="card ai-card span-2">
@@ -515,7 +596,7 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
                 <div class="id-brand">Clini<span>Sync</span></div>
                 <span style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;font-weight:600">Medical ID</span>
               </div>
-              <div class="id-name">Diya Umade..</div>
+              <div class="id-name">Ama Owusu</div>
               <div class="id-sub">Born 12 Mar 1979 · 47 yrs · Female</div>
               <div class="id-grid">
                 <div class="id-field"><div class="k">Blood group</div><div class="v data">O+</div></div>
@@ -576,7 +657,7 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
 <div class="ai-invite" id="invite" role="status" onclick="acceptInvite()">
   <span class="x" onclick="dismissInvite(event)">✕</span>
   <b>✦ CliniSync Assistant</b>
-  <span id="invite-text">Hi Diya! I can explain your recent results in plain language. Want to chat?</span>
+  <span id="invite-text">Hi Ama! I can explain your recent results in plain language. Want to chat?</span>
 </div>
 
 <div class="chat" id="chat" role="dialog" aria-label="CliniSync Assistant">
@@ -589,7 +670,7 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
     <button class="chat-close" onclick="toggleChat(false)" aria-label="Close chat">✕</button>
   </div>
   <div class="chat-body" id="chatbody">
-    <div class="msg bot">Hi Diya 👋 I'm your CliniSync Assistant. I can explain your results, remind you what your doctor said, or help you prepare for appointments.
+    <div class="msg bot">Hi Ama 👋 I'm your CliniSync Assistant. I can explain your results, remind you what your doctor said, or help you prepare for appointments.
 
 I don't give diagnoses — for medical decisions, your care team is always the right place.</div>
   </div>
@@ -618,6 +699,36 @@ function go(name){
     state.trendInviteShown=true;
     showInvite("I noticed your HbA1c is trending up. Want me to explain what that means?",600);
   }
+}
+
+/* ================= timeline filters ================= */
+document.querySelectorAll('#filters button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('#filters button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    const f=b.dataset.f;
+    document.querySelectorAll('.thread .event').forEach(ev=>{
+      const cats=(ev.dataset.cat||'').split(' ');
+      const show = f==='all' ? true : cats.includes(f);
+      ev.classList.toggle('hidden',!show);
+    });
+  });
+});
+
+/* ================= appointment prep ================= */
+function togglePrep(){
+  const p=document.getElementById('prep');
+  const open=p.classList.toggle('show');
+  document.getElementById('prepbtn').textContent=open?'Hide preparation':'✦ Prepare for appointment';
+}
+
+/* ================= explain more → assistant ================= */
+function explainMore(){
+  toggleChat(true);
+  setTimeout(()=>{
+    document.getElementById('chatinput').value="Can you explain my last visit in more detail?";
+    sendMsg();
+  },350);
 }
 
 /* ================= toast ================= */
@@ -697,7 +808,7 @@ function addEntry(){
 const state={chatOpen:false,inviteTimer:null,trendInviteShown:false,history:[]};
 
 /* ---- patient context handed to the AI (demo data) ---- */
-const PATIENT_CONTEXT=`Patient: Diya, 47, female, Accra, Ghana.
+const PATIENT_CONTEXT=`Patient: Ama Owusu, 47, female, Accra, Ghana.
 Conditions: Type 2 diabetes, hypertension. Allergies: penicillin. Blood group O+.
 Medications: Metformin 1000mg twice daily (recently increased from 500mg), Atorvastatin 20mg nightly.
 Recent labs: HbA1c 7.4% (target ≤7.0%, rising from 6.8% in January), LDL 2.1 mmol/L (down 18% on atorvastatin).
@@ -711,33 +822,108 @@ Rules you must always follow:
 - NEVER diagnose, never suggest what condition symptoms might indicate, never recommend starting/stopping/changing medication doses.
 - For any medical decision, new/worsening symptom, or anything urgent, warmly direct the patient to their care team (Dr. Mensah) or emergency services.
 - Only discuss the patient's own record and general health education. Keep answers short: 2-5 sentences, conversational, no markdown headers.
-- Refer to the patient by name (Diya) occasionally.
+- Refer to the patient by name (Ama) occasionally.
 
 Patient record you can reference:
 ${PATIENT_CONTEXT}
 
 Respond with plain text only.`;
 
-/* ---- scripted fallback (works offline / when no AI backend is connected) ---- */
+/* ---- scripted fallback (works offline / when no AI backend is connected) ----
+   Tracks the last topic so short follow-ups ("why", "how", "ok") stay in context,
+   and rotates default replies so it never repeats itself word-for-word. ---- */
+let lastTopic=null,defaultIdx=0;
+
+const FOLLOWUPS={
+  reminders:{
+    why:"Because missed appointments are one of the biggest causes of broken care journeys — reminders keep your treatment plan on track without you having to remember everything yourself.",
+    how:"You'll get a notification here in the app, and by SMS if you've added your number in settings — one a week before, and one the day before at 6 PM. You can change the timing anytime.",
+    more:"You can also add reminders for blood tests and medication refills — just tell me, or set them from the appointment card on your Home screen."
+  },
+  appointment:{
+    why:"The October review was booked so Dr. Mensah can recheck your HbA1c after the metformin increase — usually about 3 months after a dose change, which is how long the test takes to reflect it.",
+    how:"I'll remind you here in the app and by SMS — a week before, and again the day before. Your repeat blood test should ideally be done in the week before the visit.",
+    more:"Want me to add a reminder for the blood test too, or draft the questions you'd like to ask Dr. Mensah?"
+  },
+  hba1c:{
+    why:"HbA1c rises when average blood sugar has been higher over the past 2–3 months. Common reasons include diet changes, stress, illness, or medicines needing adjustment — which is exactly what Dr. Mensah is addressing with your new dose.",
+    how:"It's measured with a simple blood test. Yours is due again before the October review — the lab result will appear in your timeline automatically.",
+    more:"If you'd like, I can show you your full 18-month HbA1c trend in the Trends tab."
+  },
+  metformin:{
+    why:"Your dose was increased because your HbA1c crept above target — a common, routine adjustment. It's Dr. Mensah's decision, and the repeat test in October will show how well it's working.",
+    how:"Take it with food, morning and evening, to be gentle on your stomach. Your reminders are set for 8:00 and 19:00.",
+    more:"If you notice side effects like stomach upset, log them in your diary so your care team sees them before your review."
+  }
+};
+
+const DEFAULTS=[
+  "I can help with anything in your record, Ama — your results, medicines, appointments, or symptom patterns. What would you like to look at?",
+  "I'm not sure I caught that. Try asking me something like \"explain my HbA1c\" or \"what did the doctor say last visit?\"",
+  "Hmm, I want to make sure I'm actually helpful — could you tell me a bit more about what you'd like to know? I know your results, medicines and appointments inside out."
+];
+
 function fallbackReply(q){
-  q=q.toLowerCase();
-  if(/hba1c|a1c|blood sugar|glucose|7\.4/.test(q))
+  q=q.toLowerCase().trim();
+
+  /* --- short follow-ups: answer in the context of the last topic --- */
+  if(lastTopic&&FOLLOWUPS[lastTopic]){
+    if(/^(why|but why|why though|how come)\??$/.test(q))return FOLLOWUPS[lastTopic].why;
+    if(/^(how|how so|how will you|how does that work|how will you remind me)\??$/.test(q)||/how will you remind/.test(q))return FOLLOWUPS[lastTopic].how;
+    if(/^(ok|okay|yes|yeah|yep|sure|go on|tell me more|more)\.?$/.test(q))return FOLLOWUPS[lastTopic].more;
+  }
+  /* --- polite endings --- */
+  if(/^(no|nope|naa|nah|not now|i'?m (good|fine|ok))\.?$/.test(q)){
+    lastTopic=null;
+    return "No problem at all, Ama 😊 I'm right here whenever you need me — just tap the ✦ button.";
+  }
+  if(/thank|thanks|medaase/.test(q)){
+    lastTopic=null;
+    return "You're very welcome! Take care, and remember I'm here anytime you want something in your record explained.";
+  }
+
+  /* --- topics --- */
+  if(/remind|reminder|notif/.test(q)){
+    lastTopic='reminders';
+    return "You'll get a notification in the app and by SMS — one a week before your appointment, and another the day before. Medication reminders show on your Home screen each day. Want me to adjust the timing?";
+  }
+  if(/hba1c|a1c|blood sugar|glucose|7\.4/.test(q)){
+    lastTopic='hba1c';
     return "HbA1c shows your average blood sugar over the past 2–3 months. Yours is 7.4%, a little above your 7.0% target — that's why Dr. Mensah increased your metformin. It's a nudge, not an emergency, and you'll recheck it before your October review. 💚";
-  if(/metformin/.test(q))
-    return "Metformin helps your body use insulin better and lowers the amount of sugar your liver releases — it's the most common first medicine for type 2 diabetes. Yours was recently increased to 1000 mg twice daily, taken with food to be gentle on your stomach. Any side effects worth mentioning? Note them in your diary so Dr. Mensah sees them.";
-  if(/appointment|october|prepare|visit/.test(q))
-    return "Your next visit is 9 October, 10:30 AM with Dr. Mensah at Korle-Bu. To prepare: repeat your HbA1c blood test beforehand, keep logging your fatigue in the diary, and jot down any questions. I'll remind you the week before — and I've already flagged your fatigue pattern for Dr. Mensah to review.";
-  if(/fatigue|tired/.test(q))
-    return "I can see fatigue has come up often in your diary lately — most recently 4/5 on Monday. I've made sure this pattern is flagged for Dr. Mensah ahead of your review. If it suddenly gets much worse, please contact your care team rather than waiting for October.";
-  if(/cholesterol|ldl|atorvastatin|statin/.test(q))
-    return "Good news here, Diya — your LDL cholesterol is down 18% since you started atorvastatin, now at 2.1 mmol/L. That medicine works best taken consistently at night, which is why it's scheduled for 21:30 in your reminders.";
-  if(/thirst|water/.test(q))
-    return "You logged increased thirst recently — thanks for tracking that. It's exactly the kind of detail your care team wants to see alongside your lab results, so it's already in the summary Dr. Mensah will review. If it becomes severe or sudden, contact your clinic sooner.";
-  if(/emergency|urgent|chest|breath/.test(q))
+  }
+  if(/metformin/.test(q)){
+    lastTopic='metformin';
+    return "Metformin helps your body use insulin better and lowers the amount of sugar your liver releases — it's the most common first medicine for type 2 diabetes. Yours was recently increased to 1000 mg twice daily, taken with food. Any side effects? Note them in your diary so Dr. Mensah sees them.";
+  }
+  if(/appointment|october|prepare|visit|last visit|detail/.test(q)){
+    lastTopic='appointment';
+    return "Your next visit is 9 October, 10:30 AM with Dr. Mensah at Korle-Bu. At your last visit on 28 June, he increased your metformin, discussed your fatigue, and ordered repeat bloods. To prepare: do the HbA1c test beforehand, keep logging symptoms, and check the suggested questions on your appointment card.";
+  }
+  if(/fatigue|tired/.test(q)){
+    lastTopic=null;
+    return "Fatigue has come up often in your diary lately — most recently 4/5 on Monday. I've made sure this pattern is flagged for Dr. Mensah ahead of your review. If it suddenly gets much worse, please contact your care team rather than waiting for October.";
+  }
+  if(/cholesterol|ldl|atorvastatin|statin/.test(q)){
+    lastTopic=null;
+    return "Good news here, Ama — your LDL cholesterol is down 18% since you started atorvastatin, now at 2.1 mmol/L. That medicine works best taken consistently at night, which is why it's scheduled for 21:30 in your reminders.";
+  }
+  if(/thirst|water/.test(q)){
+    lastTopic=null;
+    return "You logged increased thirst recently — thanks for tracking that. It's already in the summary Dr. Mensah will review alongside your labs. If it becomes severe or sudden, contact your clinic sooner.";
+  }
+  if(/emergency|urgent|chest|breath/.test(q)){
+    lastTopic=null;
     return "If this is an emergency, please call emergency services or go to the nearest hospital right away — don't wait. Your CliniSync emergency ID (in the ID tab) lets responders see your critical info instantly.";
-  if(/hello|hi |hey|good morning|how are/.test(q))
-    return "Hello Diya! 😊 I'm here to help you make sense of your health record. You can ask me about your results, your medicines, or your upcoming appointment.";
-  return "That's a good question. I can explain anything in your record — your results, medicines, appointments, or symptom patterns. For medical advice or decisions though, Dr. Mensah and your care team are the right people, and I can help you prepare questions for them. What would you like to look at?";
+  }
+  if(/^(hello|hi|hey|good morning|good afternoon|how are you)\b/.test(q)){
+    lastTopic=null;
+    return "Hello Ama! 😊 I'm here to help you make sense of your health record. You can ask me about your results, your medicines, or your upcoming appointment.";
+  }
+
+  /* --- rotating default, never the same twice in a row --- */
+  const reply=DEFAULTS[defaultIdx%DEFAULTS.length];
+  defaultIdx++;
+  return reply;
 }
 
 /* ---- AI call: tries live model, falls back to scripted demo ---- */
@@ -830,7 +1016,7 @@ function dismissInvite(e){e.stopPropagation();hideInvite();}
 function acceptInvite(){toggleChat(true);}
 
 /* first self-invite shortly after arrival */
-showInvite("Hi Diya! I can explain your recent results in plain language. Want to chat?",3800);
+showInvite("Hi Ama! I can explain your recent results in plain language. Want to chat?",3800);
 </script>
 </body>
 </html>
