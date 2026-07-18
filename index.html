@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>CliniSync — Patient App Prototype</title>
+<title>CliniSync — Patient Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -14,10 +14,12 @@
   --ink-soft:#5B6E6A;
   --line:#E3EAE8;
   --pine:#0E6E5C;
+  --pine-deep:#0A5346;
   --pine-soft:#E2F1EC;
   --amber:#C77E1F;
   --amber-soft:#FBF1E1;
   --ai:#5D53C7;
+  --ai-deep:#4A41A8;
   --ai-soft:#EDEBFB;
   --alert:#B4402F;
   --alert-soft:#FBEAE6;
@@ -28,117 +30,63 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
-body{
-  font-family:var(--font-body);
-  background:#0D1F1B;
-  color:var(--ink);
-  display:flex;align-items:center;justify-content:center;
-  min-height:100dvh;
-}
-/* ---------- phone frame ---------- */
-.phone{
-  width:100%;max-width:414px;height:100dvh;max-height:100dvh;
-  background:var(--bg);
-  display:flex;flex-direction:column;
-  position:relative;overflow:hidden;
-}
-@media (min-width:480px){
-  .phone{
-    height:840px;max-height:92dvh;
-    border-radius:38px;
-    box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 0 10px #1B2E29;
-  }
-}
-/* ---------- screens ---------- */
-.screens{flex:1;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
-.screens::-webkit-scrollbar{display:none}
-.screen{display:none;padding:22px 18px 110px;animation:rise .28s ease}
+body{font-family:var(--font-body);background:var(--bg);color:var(--ink);min-height:100dvh}
+
+/* ================= app shell ================= */
+.app{display:flex;min-height:100dvh}
+.sidenav{display:none}
+.main{flex:1;min-width:0;position:relative}
+.screens{padding:22px 18px 110px;max-width:520px;margin:0 auto}
+.screen{display:none;animation:rise .28s ease}
 .screen.active{display:block}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){.screen{animation:none}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
 
-/* ---------- shared ---------- */
-.eyebrow{
-  font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--ink-soft);margin-bottom:6px;
-}
+/* ================= shared ================= */
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
 h1{font-family:var(--font-display);font-size:26px;font-weight:700;line-height:1.15;letter-spacing:-.01em}
 h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 12px}
-.card{
-  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-  padding:16px;margin-bottom:12px;
-}
-.chip{
-  display:inline-flex;align-items:center;gap:5px;
-  font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-  padding:4px 9px;border-radius:999px;
-}
+.lede{color:var(--ink-soft);font-size:13.5px;line-height:1.5;margin:10px 0 22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px}
 .chip.ai{background:var(--ai-soft);color:var(--ai)}
 .chip.lab{background:var(--pine-soft);color:var(--pine)}
 .chip.consult{background:var(--amber-soft);color:var(--amber)}
 .chip.rx{background:#E8F0FA;color:#2B5E9C}
-.chip.alertc{background:var(--alert-soft);color:var(--alert)}
 .muted{color:var(--ink-soft);font-size:13px;line-height:1.5}
 .data{font-family:var(--font-data)}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  font-family:var(--font-body);font-size:14px;font-weight:600;
-  padding:12px 18px;border-radius:14px;border:none;cursor:pointer;
-  background:var(--pine);color:#fff;width:100%;
-}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-family:var(--font-body);font-size:14px;font-weight:600;padding:12px 18px;border-radius:14px;border:none;cursor:pointer;background:var(--pine);color:#fff;width:100%}
 .btn.ghost{background:var(--pine-soft);color:var(--pine)}
 .btn:active{transform:scale(.98)}
-.disclaimer{
-  font-size:11.5px;line-height:1.5;color:var(--ink-soft);
-  border-left:3px solid var(--line);padding-left:10px;margin-top:12px;
-}
+.disclaimer{font-size:11.5px;line-height:1.5;color:var(--ink-soft);border-left:3px solid var(--line);padding-left:10px;margin-top:12px}
 
-/* ---------- home ---------- */
+/* ================= home ================= */
 .home-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
-.avatar{
-  width:42px;height:42px;border-radius:50%;
-  background:var(--pine);color:#fff;font-weight:700;font-size:15px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.ai-card{border:1px solid #DDD9F5;background:linear-gradient(180deg,#FBFAFF, #F3F1FC)}
+.avatar{width:42px;height:42px;border-radius:50%;background:var(--pine);color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ai-card{border:1px solid #DDD9F5;background:linear-gradient(180deg,#FBFAFF,#F3F1FC)}
 .ai-card p{font-size:13.5px;line-height:1.55;margin-top:9px}
 .ai-review{display:flex;align-items:center;gap:6px;margin-top:11px;font-size:11.5px;color:var(--ink-soft)}
 .dot-ok{width:7px;height:7px;border-radius:50%;background:var(--pine);flex-shrink:0}
 .appt{display:flex;gap:13px;align-items:center}
-.appt-date{
-  background:var(--pine);color:#fff;border-radius:13px;
-  width:56px;height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;
-}
+.appt-date{background:var(--pine);color:#fff;border-radius:13px;width:56px;height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
 .appt-date .d{font-family:var(--font-display);font-size:21px;font-weight:700;line-height:1}
 .appt-date .m{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.85;margin-top:3px}
 .appt h3{font-size:14.5px;font-weight:600}
 .med-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
 .med-row:last-child{border-bottom:none;padding-bottom:0}
 .med-row:first-child{padding-top:0}
-.med-check{
-  width:24px;height:24px;border-radius:8px;border:2px solid var(--line);flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;color:transparent;
-  transition:all .15s ease;background:#fff;
-}
+.med-check{width:24px;height:24px;border-radius:8px;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;color:transparent;transition:all .15s ease;background:#fff}
 .med-check.done{background:var(--pine);border-color:var(--pine);color:#fff}
 .med-name{font-size:14px;font-weight:600}
 .med-dose{font-size:12px;color:var(--ink-soft)}
 .med-time{margin-left:auto;font-family:var(--font-data);font-size:12px;color:var(--ink-soft)}
 .quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-/* ---------- timeline / the thread ---------- */
+/* ================= timeline ================= */
 .thread{position:relative;padding-left:26px}
-.thread::before{
-  content:"";position:absolute;left:8px;top:6px;bottom:6px;width:0;
-  border-left:2px dashed #BFD3CD;
-}
+.thread::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:0;border-left:2px dashed #BFD3CD}
 .event{position:relative;margin-bottom:14px}
-.event::before{
-  content:"";position:absolute;left:-24px;top:18px;
-  width:12px;height:12px;border-radius:50%;
-  background:var(--bg);border:3px solid var(--pine);
-}
-.event.is-lab::before{border-color:var(--pine)}
+.event::before{content:"";position:absolute;left:-24px;top:18px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:3px solid var(--pine)}
 .event.is-consult::before{border-color:var(--amber)}
 .event.is-rx::before{border-color:#2B5E9C}
 .event .card{margin-bottom:0}
@@ -148,9 +96,9 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
 .event .muted{font-size:12.5px}
 .event-provider{font-size:11.5px;color:var(--ink-soft);margin-top:9px;display:flex;align-items:center;gap:6px}
 
-/* ---------- trends ---------- */
+/* ================= trends ================= */
 .metric-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
-.metric-val{font-family:var(--font-data);font-size:24px;font-weight:600;color:var(--ink)}
+.metric-val{font-family:var(--font-data);font-size:24px;font-weight:600}
 .metric-val small{font-size:12px;color:var(--ink-soft);font-weight:500}
 .trend-up{color:var(--alert);font-size:12px;font-weight:600}
 .trend-down{color:var(--pine);font-size:12px;font-weight:600}
@@ -159,7 +107,7 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
 .range-note{font-size:11.5px;color:var(--ink-soft);margin-top:9px}
 .range-note b{color:var(--ink)}
 
-/* ---------- diary ---------- */
+/* ================= diary ================= */
 .entry{display:flex;gap:12px}
 .entry-sev{display:flex;flex-direction:column;align-items:center;gap:3px;padding-top:3px}
 .sev-dot{width:8px;height:8px;border-radius:50%;background:var(--line)}
@@ -170,360 +118,509 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
 .entry-date{font-family:var(--font-data);font-size:11px;color:var(--ink-soft);margin-top:8px}
 .form-card label{font-size:12px;font-weight:600;display:block;margin:12px 0 6px;color:var(--ink-soft)}
 .form-card label:first-of-type{margin-top:2px}
-.form-card select,.form-card input[type=text]{
-  width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;
-  font-family:var(--font-body);font-size:14px;background:#fff;color:var(--ink);
-}
+.form-card select,.form-card input[type=text]{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;font-family:var(--font-body);font-size:14px;background:#fff;color:var(--ink)}
 .sev-pick{display:flex;gap:8px}
-.sev-btn{
-  flex:1;padding:9px 0;border-radius:11px;border:1px solid var(--line);background:#fff;
-  font-family:var(--font-data);font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;
-}
+.sev-btn{flex:1;padding:9px 0;border-radius:11px;border:1px solid var(--line);background:#fff;font-family:var(--font-data);font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer}
 .sev-btn.sel{background:var(--amber-soft);border-color:var(--amber);color:var(--amber)}
-.toast{
-  position:absolute;left:50%;bottom:104px;transform:translateX(-50%) translateY(8px);
-  background:var(--ink);color:#fff;font-size:13px;font-weight:500;
-  padding:10px 16px;border-radius:12px;opacity:0;pointer-events:none;
-  transition:all .25s ease;white-space:nowrap;z-index:40;
-}
+.toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:#fff;font-size:13px;font-weight:500;padding:10px 16px;border-radius:12px;opacity:0;pointer-events:none;transition:all .25s ease;white-space:nowrap;z-index:90}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ---------- emergency ID ---------- */
-.id-card{
-  background:linear-gradient(150deg,#0F4A3E,#0E6E5C 60%,#12836E);
-  color:#fff;border-radius:22px;padding:20px;position:relative;overflow:hidden;
-}
-.id-card::after{
-  content:"";position:absolute;right:-40px;top:-40px;width:170px;height:170px;
-  border-radius:50%;border:26px solid rgba(255,255,255,.07);
-}
+/* ================= emergency id ================= */
+.id-card{background:linear-gradient(150deg,#0F4A3E,#0E6E5C 60%,#12836E);color:#fff;border-radius:22px;padding:20px;position:relative;overflow:hidden}
+.id-card::after{content:"";position:absolute;right:-40px;top:-40px;width:170px;height:170px;border-radius:50%;border:26px solid rgba(255,255,255,.07)}
 .id-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
-.id-brand{font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:-.01em}
+.id-brand{font-family:var(--font-display);font-weight:700;font-size:15px}
 .id-brand span{opacity:.7;font-weight:500}
 .id-name{font-family:var(--font-display);font-size:21px;font-weight:700}
 .id-sub{font-size:12px;opacity:.8;margin-top:2px}
 .id-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px 14px;margin-top:16px;position:relative;z-index:1}
 .id-field .k{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.65;font-weight:600}
 .id-field .v{font-size:13.5px;font-weight:600;margin-top:2px}
-.id-field .v.data{font-family:var(--font-data)}
-.qr-wrap{background:#fff;border-radius:16px;padding:14px;display:flex;gap:14px;align-items:center;margin-top:12px}
+.qr-wrap{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;gap:14px;align-items:center;margin-top:12px}
 .qr{width:96px;height:96px;flex-shrink:0}
 .qr-note{font-size:12px;line-height:1.5;color:var(--ink-soft)}
 .qr-note b{color:var(--ink);font-size:12.5px}
 
-/* ---------- bottom nav ---------- */
-.nav{
-  position:absolute;left:0;right:0;bottom:0;z-index:30;
-  background:rgba(255,255,255,.92);backdrop-filter:blur(14px);
-  border-top:1px solid var(--line);
-  display:flex;justify-content:space-around;
-  padding:8px 6px calc(10px + env(safe-area-inset-bottom));
-}
-.nav button{
-  background:none;border:none;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  font-family:var(--font-body);font-size:10px;font-weight:600;color:var(--ink-soft);
-  padding:5px 10px;border-radius:12px;min-width:56px;
-}
+/* ================= bottom nav (mobile) ================= */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px calc(10px + env(safe-area-inset-bottom))}
+.nav button{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:var(--font-body);font-size:10px;font-weight:600;color:var(--ink-soft);padding:5px 10px;border-radius:12px;min-width:56px}
 .nav button svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .nav button.active{color:var(--pine)}
 .nav button.active svg{stroke-width:2.3}
+
+/* ================= AI assistant launcher ================= */
+.ai-fab{
+  position:fixed;top:18px;right:18px;z-index:60;
+  width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;
+  background:linear-gradient(140deg,var(--ai),var(--ai-deep));
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(93,83,199,.38);
+  animation:fabFloat 5s ease-in-out infinite;
+  transition:transform .2s ease;
+}
+.ai-fab:hover{transform:scale(1.07)}
+.ai-fab svg{width:25px;height:25px;fill:#fff}
+.ai-fab::before{
+  content:"";position:absolute;inset:-5px;border-radius:50%;
+  border:2px solid rgba(93,83,199,.45);
+  animation:fabPulse 2.8s ease-out infinite;
+}
+@keyframes fabFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fabPulse{0%{transform:scale(.9);opacity:.9}70%{transform:scale(1.45);opacity:0}100%{opacity:0}}
+.ai-fab .badge{position:absolute;top:-2px;right:-2px;width:13px;height:13px;border-radius:50%;background:var(--amber);border:2.5px solid var(--bg);display:none}
+.ai-fab.has-invite .badge{display:block}
+
+/* self-inviting bubble */
+.ai-invite{
+  position:fixed;top:26px;right:82px;z-index:59;
+  max-width:250px;background:#fff;border:1px solid #DDD9F5;border-radius:16px 4px 16px 16px;
+  padding:12px 14px;box-shadow:0 12px 32px rgba(19,50,44,.14);
+  font-size:13px;line-height:1.45;cursor:pointer;
+  opacity:0;transform:translateY(-6px) scale(.97);pointer-events:none;
+  transition:opacity .45s ease,transform .45s ease;
+}
+.ai-invite.show{opacity:1;transform:none;pointer-events:auto}
+.ai-invite b{color:var(--ai);font-size:12px;display:block;margin-bottom:3px}
+.ai-invite .x{position:absolute;top:6px;right:9px;color:var(--ink-soft);font-size:14px;line-height:1;padding:3px}
+
+/* ================= chat panel ================= */
+.chat{
+  position:fixed;z-index:70;background:#fff;display:flex;flex-direction:column;
+  inset:0;
+  transform:translateY(14px);opacity:0;pointer-events:none;
+  transition:opacity .3s ease,transform .3s ease;
+}
+.chat.open{transform:none;opacity:1;pointer-events:auto}
+.chat-head{
+  background:linear-gradient(140deg,var(--ai),var(--ai-deep));color:#fff;
+  padding:16px 18px;display:flex;align-items:center;gap:12px;flex-shrink:0;
+}
+.chat-head .logo{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center}
+.chat-head .logo svg{width:20px;height:20px;fill:#fff}
+.chat-head h3{font-family:var(--font-display);font-size:16px;font-weight:700}
+.chat-head .st{font-size:11.5px;opacity:.85;display:flex;align-items:center;gap:5px}
+.chat-head .st::before{content:"";width:7px;height:7px;border-radius:50%;background:#7EE8B2}
+.chat-close{margin-left:auto;background:rgba(255,255,255,.14);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer}
+.chat-body{flex:1;overflow-y:auto;padding:18px 16px;background:#FAFAFE}
+.msg{max-width:82%;padding:11px 14px;border-radius:16px;font-size:13.5px;line-height:1.55;margin-bottom:10px;white-space:pre-wrap;overflow-wrap:break-word}
+.msg.bot{background:#fff;border:1px solid #E6E3F6;border-bottom-left-radius:5px}
+.msg.user{background:var(--pine);color:#fff;margin-left:auto;border-bottom-right-radius:5px}
+.msg.typing{display:inline-flex;gap:5px;align-items:center;padding:14px 16px}
+.msg.typing i{width:7px;height:7px;border-radius:50%;background:var(--ai);opacity:.4;animation:blink 1.2s infinite}
+.msg.typing i:nth-child(2){animation-delay:.2s}
+.msg.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+.chat-note{font-size:10.5px;color:var(--ink-soft);text-align:center;padding:0 24px 8px;line-height:1.45}
+.sugg{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 10px;background:#FAFAFE}
+.sugg button{border:1px solid #DDD9F5;background:#fff;color:var(--ai);font-family:var(--font-body);font-size:12px;font-weight:600;padding:8px 12px;border-radius:999px;cursor:pointer}
+.chat-input{display:flex;gap:9px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:#fff;flex-shrink:0}
+.chat-input input{flex:1;border:1px solid var(--line);border-radius:999px;padding:12px 16px;font-family:var(--font-body);font-size:14px;color:var(--ink);background:var(--bg)}
+.chat-input button{width:46px;height:46px;border-radius:50%;border:none;background:var(--ai);color:#fff;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.chat-input button svg{width:19px;height:19px;fill:#fff}
+
+/* ================= desktop ================= */
+@media (min-width:1024px){
+  .sidenav{
+    display:flex;flex-direction:column;gap:4px;
+    width:230px;flex-shrink:0;padding:26px 16px;
+    background:#fff;border-right:1px solid var(--line);
+    position:sticky;top:0;height:100dvh;
+  }
+  .brand{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--pine-deep);padding:0 12px 26px}
+  .brand span{color:var(--ink-soft);font-weight:500}
+  .sidenav button{
+    display:flex;align-items:center;gap:12px;background:none;border:none;cursor:pointer;
+    font-family:var(--font-body);font-size:14px;font-weight:600;color:var(--ink-soft);
+    padding:12px 14px;border-radius:13px;text-align:left;
+  }
+  .sidenav button svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .sidenav button:hover{background:var(--bg)}
+  .sidenav button.active{background:var(--pine-soft);color:var(--pine)}
+  .side-foot{margin-top:auto;padding:12px;font-size:11px;color:var(--ink-soft);line-height:1.5}
+  .nav{display:none}
+  .screens{max-width:960px;padding:44px 48px 80px}
+  h1{font-size:34px}
+  .lede{font-size:14.5px;max-width:560px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+  .grid-2 .card{margin-bottom:0}
+  .span-2{grid-column:1/-1}
+  .thread{max-width:640px}
+  .ai-fab{top:26px;right:30px}
+  .ai-invite{top:34px;right:96px}
+  .chat{
+    inset:auto 30px 30px auto;top:92px;width:390px;max-height:calc(100dvh - 122px);
+    border-radius:22px;border:1px solid #E6E3F6;overflow:hidden;
+    box-shadow:0 28px 70px rgba(19,50,44,.25);
+  }
+}
 </style>
 </head>
 <body>
 
-<div class="phone">
-  <div class="screens">
+<div class="app">
 
-    <!-- ============ HOME ============ -->
-    <section class="screen active" id="scr-home">
-      <div class="home-head">
-        <div>
-          <div class="eyebrow">Thursday, 16 July</div>
-          <h1>Good morning,<br>Diya</h1>
-        </div>
-        <div class="avatar">DU</div>
-      </div>
+  <!-- ===== desktop sidebar ===== -->
+  <aside class="sidenav">
+    <div class="brand">Clini<span>Sync</span></div>
+    <button class="active" data-scr="home" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+    <button data-scr="thread" onclick="go('thread')"><svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="20" r="2"/><path d="M12 6v4M12 14v4"/></svg>Timeline</button>
+    <button data-scr="trends" onclick="go('trends')"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Trends</button>
+    <button data-scr="diary" onclick="go('diary')"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Symptom diary</button>
+    <button data-scr="id" onclick="go('id')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M13 9h5M13 13h5M5.5 16.5c.8-1.2 1.8-1.8 3-1.8s2.2.6 3 1.8"/></svg>Emergency ID</button>
+    <div class="side-foot">Diya · Patient<br>CliniSync prototype v2</div>
+  </aside>
 
-      <div class="card ai-card">
-        <span class="chip ai">✦ AI summary</span>
-        <p><b>Your last visit, explained simply.</b><br>
-        Dr. Mensah increased your metformin to help bring your blood sugar closer to target. Nothing urgent was found. You'll repeat the HbA1c blood test before your next review in October.</p>
-        <div class="ai-review"><span class="dot-ok"></span> Reviewed and approved by your care team</div>
-      </div>
+  <main class="main">
+    <div class="screens">
 
-      <h2>Next appointment</h2>
-      <div class="card appt">
-        <div class="appt-date"><span class="d">09</span><span class="m">Oct</span></div>
-        <div>
-          <h3>Endocrinology review</h3>
-          <div class="muted">Dr. K. Mensah · Korle-Bu Teaching Hospital<br><span class="data" style="font-size:12px">10:30 AM</span> · Reminder set</div>
-        </div>
-      </div>
-
-      <h2>Today's medication</h2>
-      <div class="card" id="meds">
-        <div class="med-row">
-          <div class="med-check done" role="checkbox" aria-checked="true" tabindex="0">✓</div>
-          <div><div class="med-name">Metformin</div><div class="med-dose">1000 mg · with breakfast</div></div>
-          <div class="med-time">8:00</div>
-        </div>
-        <div class="med-row">
-          <div class="med-check" role="checkbox" aria-checked="false" tabindex="0">✓</div>
-          <div><div class="med-name">Metformin</div><div class="med-dose">1000 mg · with dinner</div></div>
-          <div class="med-time">19:00</div>
-        </div>
-        <div class="med-row">
-          <div class="med-check" role="checkbox" aria-checked="false" tabindex="0">✓</div>
-          <div><div class="med-name">Atorvastatin</div><div class="med-dose">20 mg · before bed</div></div>
-          <div class="med-time">21:30</div>
-        </div>
-      </div>
-
-      <div class="quick">
-        <button class="btn ghost" onclick="go('diary')">+ Log a symptom</button>
-        <button class="btn ghost" onclick="go('trends')">View my trends</button>
-      </div>
-    </section>
-
-    <!-- ============ TIMELINE ============ -->
-    <section class="screen" id="scr-thread">
-      <div class="eyebrow">Your care journey</div>
-      <h1>One connected<br>timeline</h1>
-      <p class="muted" style="margin:10px 0 22px">Every visit, test and prescription — from every provider — in one thread.</p>
-
-      <div class="thread">
-        <div class="event is-lab">
-          <div class="card">
-            <div class="event-top"><span class="chip lab">Lab result</span><span class="event-date">02 Jul 2026</span></div>
-            <h3>HbA1c — 7.4%</h3>
-            <div class="muted">Slightly above your 7.0% target. Flagged for review at your October appointment.</div>
-            <div class="event-provider">◈ MDS-Lancet Laboratories, Accra</div>
-          </div>
-        </div>
-        <div class="event is-consult">
-          <div class="card">
-            <div class="event-top"><span class="chip consult">Consultation</span><span class="event-date">28 Jun 2026</span></div>
-            <h3>Diabetes review</h3>
-            <div class="muted">Medication adjusted. Discussed fatigue and sleep. Repeat bloods ordered.</div>
-            <div class="event-provider">◈ Dr. K. Mensah · Korle-Bu Teaching Hospital</div>
-          </div>
-        </div>
-        <div class="event is-rx">
-          <div class="card">
-            <div class="event-top"><span class="chip rx">Prescription</span><span class="event-date">28 Jun 2026</span></div>
-            <h3>Metformin 1000 mg</h3>
-            <div class="muted">Increased from 500 mg, twice daily. 90-day supply.</div>
-            <div class="event-provider">◈ Ernest Chemists, Osu</div>
-          </div>
-        </div>
-        <div class="event is-consult">
-          <div class="card">
-            <div class="event-top"><span class="chip consult">Consultation</span><span class="event-date">14 May 2026</span></div>
-            <h3>Eye screening — normal</h3>
-            <div class="muted">No signs of diabetic retinopathy. Next screening in 12 months.</div>
-            <div class="event-provider">◈ Emmanuel Eye Centre, Accra</div>
-          </div>
-        </div>
-        <div class="event is-lab">
-          <div class="card">
-            <div class="event-top"><span class="chip lab">Lab result</span><span class="event-date">03 Mar 2026</span></div>
-            <h3>Lipid panel — improved</h3>
-            <div class="muted">LDL cholesterol down 18% since starting atorvastatin.</div>
-            <div class="event-provider">◈ Nyaho Medical Centre</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ TRENDS ============ -->
-    <section class="screen" id="scr-trends">
-      <div class="eyebrow">Health intelligence</div>
-      <h1>Your results,<br>over time</h1>
-      <p class="muted" style="margin:10px 0 22px">Lab values charted across every provider, so nothing gets lost between visits.</p>
-
-      <div class="card">
-        <div class="metric-head">
-          <div><b style="font-size:14.5px">HbA1c</b> <span class="muted" style="font-size:11.5px">· 18 months</span></div>
-          <div class="metric-val">7.4<small> %</small></div>
-        </div>
-        <div class="trend-up">▲ 0.3 since January</div>
-        <svg class="chart" viewBox="0 0 340 130" role="img" aria-label="HbA1c line chart over 18 months">
-          <defs>
-            <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#0E6E5C" stop-opacity=".18"/>
-              <stop offset="1" stop-color="#0E6E5C" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <line x1="0" y1="58" x2="340" y2="58" stroke="#C77E1F" stroke-width="1" stroke-dasharray="4 5" opacity=".6"/>
-          <text x="334" y="52" font-size="9" fill="#C77E1F" text-anchor="end" font-family="IBM Plex Mono">target 7.0</text>
-          <path d="M10,84 L65,90 L120,80 L175,64 L230,50 L285,42 L330,46 L330,130 L10,130 Z" fill="url(#g1)"/>
-          <polyline points="10,84 65,90 120,80 175,64 230,50 285,42 330,46" fill="none" stroke="#0E6E5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <g fill="#0E6E5C">
-            <circle cx="10" cy="84" r="3.5"/><circle cx="65" cy="90" r="3.5"/><circle cx="120" cy="80" r="3.5"/>
-            <circle cx="175" cy="64" r="3.5"/><circle cx="230" cy="50" r="3.5"/><circle cx="285" cy="42" r="3.5"/>
-          </g>
-          <circle cx="330" cy="46" r="5" fill="#fff" stroke="#0E6E5C" stroke-width="2.5"/>
-        </svg>
-        <div class="chart-labels"><span>Feb 25</span><span>Jun 25</span><span>Oct 25</span><span>Feb 26</span><span>Jul 26</span></div>
-        <div class="range-note">Latest: <b class="data">7.4%</b> · Target: <b class="data">≤ 7.0%</b> · Source: 4 laboratories</div>
-      </div>
-
-      <div class="card">
-        <div class="metric-head">
-          <div><b style="font-size:14.5px">LDL cholesterol</b> <span class="muted" style="font-size:11.5px">· 12 months</span></div>
-          <div class="metric-val">2.1<small> mmol/L</small></div>
-        </div>
-        <div class="trend-down">▼ 18% since starting atorvastatin</div>
-        <svg class="chart" viewBox="0 0 340 90" role="img" aria-label="LDL cholesterol line chart over 12 months">
-          <polyline points="10,22 90,26 170,40 250,52 330,58" fill="none" stroke="#0E6E5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <g fill="#0E6E5C">
-            <circle cx="10" cy="22" r="3.5"/><circle cx="90" cy="26" r="3.5"/><circle cx="170" cy="40" r="3.5"/><circle cx="250" cy="52" r="3.5"/>
-          </g>
-          <circle cx="330" cy="58" r="5" fill="#fff" stroke="#0E6E5C" stroke-width="2.5"/>
-        </svg>
-        <div class="chart-labels"><span>Jul 25</span><span>Nov 25</span><span>Mar 26</span><span>Jul 26</span></div>
-      </div>
-
-      <div class="card ai-card">
-        <span class="chip ai">✦ Pattern noticed</span>
-        <p>Your <b>fatigue entries increased</b> during the same months your <b>HbA1c was rising</b> (March–July). This pattern has been shared with Dr. Mensah ahead of your October review.</p>
-        <div class="disclaimer">CliniSync surfaces patterns for your clinician to review. It does not diagnose conditions or interpret results.</div>
-      </div>
-    </section>
-
-    <!-- ============ DIARY ============ -->
-    <section class="screen" id="scr-diary">
-      <div class="eyebrow">Symptom diary</div>
-      <h1>How you've<br>been feeling</h1>
-      <p class="muted" style="margin:10px 0 22px">Your entries appear alongside your lab trends, so your clinician sees the full picture.</p>
-
-      <div class="card form-card">
-        <label for="sym">Symptom</label>
-        <select id="sym">
-          <option>Fatigue</option><option>Headache</option><option>Dizziness</option>
-          <option>Blurred vision</option><option>Increased thirst</option><option>Other</option>
-        </select>
-        <label>Severity</label>
-        <div class="sev-pick" id="sevpick">
-          <button class="sev-btn" data-v="1">1</button>
-          <button class="sev-btn" data-v="2">2</button>
-          <button class="sev-btn sel" data-v="3">3</button>
-          <button class="sev-btn" data-v="4">4</button>
-          <button class="sev-btn" data-v="5">5</button>
-        </div>
-        <label for="note">Note <span style="font-weight:400">(optional)</span></label>
-        <input type="text" id="note" placeholder="e.g. worse in the afternoon">
-        <div style="margin-top:14px"><button class="btn" onclick="addEntry()">Save entry</button></div>
-      </div>
-
-      <h2>Recent entries</h2>
-      <div id="entries">
-        <div class="card entry">
-          <div class="entry-sev">
-            <span class="sev-dot on hi"></span><span class="sev-dot on hi"></span><span class="sev-dot on hi"></span><span class="sev-dot on"></span><span class="sev-dot"></span>
-          </div>
+      <!-- ============ HOME ============ -->
+      <section class="screen active" id="scr-home">
+        <div class="home-head">
           <div>
-            <h3>Fatigue <span class="data" style="font-size:11px;color:var(--ink-soft)">4/5</span></h3>
-            <div class="muted">Very tired after lunch, needed to rest before evening.</div>
-            <div class="entry-date">Mon 14 Jul · 3:40 PM</div>
+            <div class="eyebrow">Thursday, 16 July</div>
+            <h1>Good morning,<br>Diya</h1>
           </div>
+          <div class="avatar">DU</div>
         </div>
-        <div class="card entry">
-          <div class="entry-sev">
-            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+
+        <div class="grid-2">
+          <div class="card ai-card span-2">
+            <span class="chip ai">✦ AI summary</span>
+            <p><b>Your last visit, explained simply.</b><br>
+            Dr. Mensah increased your metformin to help bring your blood sugar closer to target. Nothing urgent was found. You'll repeat the HbA1c blood test before your next review in October.</p>
+            <div class="ai-review"><span class="dot-ok"></span> Reviewed and approved by your care team</div>
           </div>
+
           <div>
-            <h3>Increased thirst <span class="data" style="font-size:11px;color:var(--ink-soft)">3/5</span></h3>
-            <div class="muted">Drinking more water than usual this week.</div>
-            <div class="entry-date">Fri 11 Jul · 9:15 AM</div>
+            <h2>Next appointment</h2>
+            <div class="card appt">
+              <div class="appt-date"><span class="d">09</span><span class="m">Oct</span></div>
+              <div>
+                <h3>Endocrinology review</h3>
+                <div class="muted">Dr. K. Mensah · Korle-Bu Teaching Hospital<br><span class="data" style="font-size:12px">10:30 AM</span> · Reminder set</div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="card entry">
-          <div class="entry-sev">
-            <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span><span class="sev-dot"></span>
-          </div>
+
           <div>
-            <h3>Headache <span class="data" style="font-size:11px;color:var(--ink-soft)">2/5</span></h3>
-            <div class="muted">Mild, morning only. Passed after breakfast.</div>
-            <div class="entry-date">Tue 08 Jul · 8:02 AM</div>
+            <h2>Today's medication</h2>
+            <div class="card" id="meds">
+              <div class="med-row">
+                <div class="med-check done" role="checkbox" aria-checked="true" tabindex="0">✓</div>
+                <div><div class="med-name">Metformin</div><div class="med-dose">1000 mg · with breakfast</div></div>
+                <div class="med-time">8:00</div>
+              </div>
+              <div class="med-row">
+                <div class="med-check" role="checkbox" aria-checked="false" tabindex="0">✓</div>
+                <div><div class="med-name">Metformin</div><div class="med-dose">1000 mg · with dinner</div></div>
+                <div class="med-time">19:00</div>
+              </div>
+              <div class="med-row">
+                <div class="med-check" role="checkbox" aria-checked="false" tabindex="0">✓</div>
+                <div><div class="med-name">Atorvastatin</div><div class="med-dose">20 mg · before bed</div></div>
+                <div class="med-time">21:30</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="quick span-2">
+            <button class="btn ghost" onclick="go('diary')">+ Log a symptom</button>
+            <button class="btn ghost" onclick="go('trends')">View my trends</button>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ============ EMERGENCY ID ============ -->
-    <section class="screen" id="scr-id">
-      <div class="eyebrow">Digital health passport</div>
-      <h1>Emergency<br>medical ID</h1>
-      <p class="muted" style="margin:10px 0 22px">Critical information that travels with you — to any hospital, anywhere.</p>
+      <!-- ============ TIMELINE ============ -->
+      <section class="screen" id="scr-thread">
+        <div class="eyebrow">Your care journey</div>
+        <h1>One connected timeline</h1>
+        <p class="lede">Every visit, test and prescription — from every provider — in one thread.</p>
 
-      <div class="id-card">
-        <div class="id-top">
-          <div class="id-brand">Clini<span>Sync</span></div>
-          <span style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;font-weight:600">Medical ID</span>
+        <div class="thread">
+          <div class="event is-lab">
+            <div class="card">
+              <div class="event-top"><span class="chip lab">Lab result</span><span class="event-date">02 Jul 2026</span></div>
+              <h3>HbA1c — 7.4%</h3>
+              <div class="muted">Slightly above your 7.0% target. Flagged for review at your October appointment.</div>
+              <div class="event-provider">◈ MDS-Lancet Laboratories, Accra</div>
+            </div>
+          </div>
+          <div class="event is-consult">
+            <div class="card">
+              <div class="event-top"><span class="chip consult">Consultation</span><span class="event-date">28 Jun 2026</span></div>
+              <h3>Diabetes review</h3>
+              <div class="muted">Medication adjusted. Discussed fatigue and sleep. Repeat bloods ordered.</div>
+              <div class="event-provider">◈ Dr. K. Mensah · Korle-Bu Teaching Hospital</div>
+            </div>
+          </div>
+          <div class="event is-rx">
+            <div class="card">
+              <div class="event-top"><span class="chip rx">Prescription</span><span class="event-date">28 Jun 2026</span></div>
+              <h3>Metformin 1000 mg</h3>
+              <div class="muted">Increased from 500 mg, twice daily. 90-day supply.</div>
+              <div class="event-provider">◈ Ernest Chemists, Osu</div>
+            </div>
+          </div>
+          <div class="event is-consult">
+            <div class="card">
+              <div class="event-top"><span class="chip consult">Consultation</span><span class="event-date">14 May 2026</span></div>
+              <h3>Eye screening — normal</h3>
+              <div class="muted">No signs of diabetic retinopathy. Next screening in 12 months.</div>
+              <div class="event-provider">◈ Emmanuel Eye Centre, Accra</div>
+            </div>
+          </div>
+          <div class="event is-lab">
+            <div class="card">
+              <div class="event-top"><span class="chip lab">Lab result</span><span class="event-date">03 Mar 2026</span></div>
+              <h3>Lipid panel — improved</h3>
+              <div class="muted">LDL cholesterol down 18% since starting atorvastatin.</div>
+              <div class="event-provider">◈ Nyaho Medical Centre</div>
+            </div>
+          </div>
         </div>
-        <div class="id-name">Ama Owusu</div>
-        <div class="id-sub">Born 12 Mar 1979 · 47 yrs · Female</div>
-        <div class="id-grid">
-          <div class="id-field"><div class="k">Blood group</div><div class="v data">O+</div></div>
-          <div class="id-field"><div class="k">Allergies</div><div class="v">Penicillin</div></div>
-          <div class="id-field"><div class="k">Conditions</div><div class="v">Type 2 diabetes, Hypertension</div></div>
-          <div class="id-field"><div class="k">Medications</div><div class="v">Metformin, Atorvastatin</div></div>
-          <div class="id-field" style="grid-column:1/-1"><div class="k">Emergency contact</div><div class="v">Kojo Owusu · <span class="data">+233 24 XXX XX21</span></div></div>
+      </section>
+
+      <!-- ============ TRENDS ============ -->
+      <section class="screen" id="scr-trends">
+        <div class="eyebrow">Health intelligence</div>
+        <h1>Your results, over time</h1>
+        <p class="lede">Lab values charted across every provider, so nothing gets lost between visits.</p>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="metric-head">
+              <div><b style="font-size:14.5px">HbA1c</b> <span class="muted" style="font-size:11.5px">· 18 months</span></div>
+              <div class="metric-val">7.4<small> %</small></div>
+            </div>
+            <div class="trend-up">▲ 0.3 since January</div>
+            <svg class="chart" viewBox="0 0 340 130" role="img" aria-label="HbA1c line chart over 18 months">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#0E6E5C" stop-opacity=".18"/>
+                  <stop offset="1" stop-color="#0E6E5C" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <line x1="0" y1="58" x2="340" y2="58" stroke="#C77E1F" stroke-width="1" stroke-dasharray="4 5" opacity=".6"/>
+              <text x="334" y="52" font-size="9" fill="#C77E1F" text-anchor="end" font-family="IBM Plex Mono">target 7.0</text>
+              <path d="M10,84 L65,90 L120,80 L175,64 L230,50 L285,42 L330,46 L330,130 L10,130 Z" fill="url(#g1)"/>
+              <polyline points="10,84 65,90 120,80 175,64 230,50 285,42 330,46" fill="none" stroke="#0E6E5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <g fill="#0E6E5C">
+                <circle cx="10" cy="84" r="3.5"/><circle cx="65" cy="90" r="3.5"/><circle cx="120" cy="80" r="3.5"/>
+                <circle cx="175" cy="64" r="3.5"/><circle cx="230" cy="50" r="3.5"/><circle cx="285" cy="42" r="3.5"/>
+              </g>
+              <circle cx="330" cy="46" r="5" fill="#fff" stroke="#0E6E5C" stroke-width="2.5"/>
+            </svg>
+            <div class="chart-labels"><span>Feb 25</span><span>Jun 25</span><span>Oct 25</span><span>Feb 26</span><span>Jul 26</span></div>
+            <div class="range-note">Latest: <b class="data">7.4%</b> · Target: <b class="data">≤ 7.0%</b> · Source: 4 laboratories</div>
+          </div>
+
+          <div class="card">
+            <div class="metric-head">
+              <div><b style="font-size:14.5px">LDL cholesterol</b> <span class="muted" style="font-size:11.5px">· 12 months</span></div>
+              <div class="metric-val">2.1<small> mmol/L</small></div>
+            </div>
+            <div class="trend-down">▼ 18% since starting atorvastatin</div>
+            <svg class="chart" viewBox="0 0 340 130" role="img" aria-label="LDL cholesterol line chart over 12 months">
+              <polyline points="10,32 90,38 170,58 250,74 330,82" fill="none" stroke="#0E6E5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <g fill="#0E6E5C">
+                <circle cx="10" cy="32" r="3.5"/><circle cx="90" cy="38" r="3.5"/><circle cx="170" cy="58" r="3.5"/><circle cx="250" cy="74" r="3.5"/>
+              </g>
+              <circle cx="330" cy="82" r="5" fill="#fff" stroke="#0E6E5C" stroke-width="2.5"/>
+            </svg>
+            <div class="chart-labels"><span>Jul 25</span><span>Nov 25</span><span>Mar 26</span><span>Jul 26</span></div>
+          </div>
+
+          <div class="card ai-card span-2">
+            <span class="chip ai">✦ Pattern noticed</span>
+            <p>Your <b>fatigue entries increased</b> during the same months your <b>HbA1c was rising</b> (March–July). This pattern has been shared with Dr. Mensah ahead of your October review.</p>
+            <div class="disclaimer">CliniSync surfaces patterns for your clinician to review. It does not diagnose conditions or interpret results.</div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div class="qr-wrap">
-        <svg class="qr" viewBox="0 0 29 29" aria-label="Emergency access QR code" id="qrsvg"></svg>
-        <div class="qr-note">
-          <b>Scan for emergency access</b><br>
-          Verified responders see critical information only. Every scan is logged and you're notified.
+      <!-- ============ DIARY ============ -->
+      <section class="screen" id="scr-diary">
+        <div class="eyebrow">Symptom diary</div>
+        <h1>How you've been feeling</h1>
+        <p class="lede">Your entries appear alongside your lab trends, so your clinician sees the full picture.</p>
+
+        <div class="grid-2">
+          <div class="card form-card">
+            <label for="sym">Symptom</label>
+            <select id="sym">
+              <option>Fatigue</option><option>Headache</option><option>Dizziness</option>
+              <option>Blurred vision</option><option>Increased thirst</option><option>Other</option>
+            </select>
+            <label>Severity</label>
+            <div class="sev-pick" id="sevpick">
+              <button class="sev-btn" data-v="1">1</button>
+              <button class="sev-btn" data-v="2">2</button>
+              <button class="sev-btn sel" data-v="3">3</button>
+              <button class="sev-btn" data-v="4">4</button>
+              <button class="sev-btn" data-v="5">5</button>
+            </div>
+            <label for="note">Note <span style="font-weight:400">(optional)</span></label>
+            <input type="text" id="note" placeholder="e.g. worse in the afternoon">
+            <div style="margin-top:14px"><button class="btn" onclick="addEntry()">Save entry</button></div>
+          </div>
+
+          <div>
+            <h2 style="margin-top:0">Recent entries</h2>
+            <div id="entries">
+              <div class="card entry">
+                <div class="entry-sev">
+                  <span class="sev-dot on hi"></span><span class="sev-dot on hi"></span><span class="sev-dot on hi"></span><span class="sev-dot on"></span><span class="sev-dot"></span>
+                </div>
+                <div>
+                  <h3>Fatigue <span class="data" style="font-size:11px;color:var(--ink-soft)">4/5</span></h3>
+                  <div class="muted">Very tired after lunch, needed to rest before evening.</div>
+                  <div class="entry-date">Mon 14 Jul · 3:40 PM</div>
+                </div>
+              </div>
+              <div class="card entry">
+                <div class="entry-sev">
+                  <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+                </div>
+                <div>
+                  <h3>Increased thirst <span class="data" style="font-size:11px;color:var(--ink-soft)">3/5</span></h3>
+                  <div class="muted">Drinking more water than usual this week.</div>
+                  <div class="entry-date">Fri 11 Jul · 9:15 AM</div>
+                </div>
+              </div>
+              <div class="card entry">
+                <div class="entry-sev">
+                  <span class="sev-dot on"></span><span class="sev-dot on"></span><span class="sev-dot"></span><span class="sev-dot"></span><span class="sev-dot"></span>
+                </div>
+                <div>
+                  <h3>Headache <span class="data" style="font-size:11px;color:var(--ink-soft)">2/5</span></h3>
+                  <div class="muted">Mild, morning only. Passed after breakfast.</div>
+                  <div class="entry-date">Tue 08 Jul · 8:02 AM</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div class="card" style="margin-top:12px">
-        <b style="font-size:13.5px">Your data, your rules</b>
-        <p class="muted" style="margin-top:6px">Full records stay encrypted and are shared only with providers you approve. You can revoke access at any time.</p>
-      </div>
+      <!-- ============ EMERGENCY ID ============ -->
+      <section class="screen" id="scr-id">
+        <div class="eyebrow">Digital health passport</div>
+        <h1>Emergency medical ID</h1>
+        <p class="lede">Critical information that travels with you — to any hospital, anywhere.</p>
 
-      <button class="btn ghost" style="margin-top:2px" onclick="toast('Card sent to print queue')">Print physical ID card</button>
-    </section>
+        <div class="grid-2">
+          <div>
+            <div class="id-card">
+              <div class="id-top">
+                <div class="id-brand">Clini<span>Sync</span></div>
+                <span style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;font-weight:600">Medical ID</span>
+              </div>
+              <div class="id-name">Diya Umade..</div>
+              <div class="id-sub">Born 12 Mar 1979 · 47 yrs · Female</div>
+              <div class="id-grid">
+                <div class="id-field"><div class="k">Blood group</div><div class="v data">O+</div></div>
+                <div class="id-field"><div class="k">Allergies</div><div class="v">Penicillin</div></div>
+                <div class="id-field"><div class="k">Conditions</div><div class="v">Type 2 diabetes, Hypertension</div></div>
+                <div class="id-field"><div class="k">Medications</div><div class="v">Metformin, Atorvastatin</div></div>
+                <div class="id-field" style="grid-column:1/-1"><div class="k">Emergency contact</div><div class="v">Kojo Owusu · <span class="data">+233 24 XXX XX21</span></div></div>
+              </div>
+            </div>
+            <div class="qr-wrap">
+              <svg class="qr" viewBox="0 0 29 29" aria-label="Emergency access QR code" id="qrsvg"></svg>
+              <div class="qr-note">
+                <b>Scan for emergency access</b><br>
+                Verified responders see critical information only. Every scan is logged and you're notified.
+              </div>
+            </div>
+          </div>
 
-  </div>
+          <div>
+            <div class="card">
+              <b style="font-size:13.5px">Your data, your rules</b>
+              <p class="muted" style="margin-top:6px">Full records stay encrypted and are shared only with providers you approve. You can revoke access at any time.</p>
+            </div>
+            <button class="btn ghost" onclick="toast('Card sent to print queue')">Print physical ID card</button>
+          </div>
+        </div>
+      </section>
 
-  <!-- ============ NAV ============ -->
-  <nav class="nav">
-    <button class="active" data-scr="home" onclick="go('home')">
-      <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home
-    </button>
-    <button data-scr="thread" onclick="go('thread')">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="20" r="2"/><path d="M12 6v4M12 14v4"/></svg>Timeline
-    </button>
-    <button data-scr="trends" onclick="go('trends')">
-      <svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Trends
-    </button>
-    <button data-scr="diary" onclick="go('diary')">
-      <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Diary
-    </button>
-    <button data-scr="id" onclick="go('id')">
-      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M13 9h5M13 13h5M5.5 16.5c.8-1.2 1.8-1.8 3-1.8s2.2.6 3 1.8"/></svg>ID
-    </button>
-  </nav>
+    </div>
 
-  <div class="toast" id="toast"></div>
+    <!-- ===== bottom nav (mobile) ===== -->
+    <nav class="nav">
+      <button class="active" data-scr="home" onclick="go('home')">
+        <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home
+      </button>
+      <button data-scr="thread" onclick="go('thread')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="20" r="2"/><path d="M12 6v4M12 14v4"/></svg>Timeline
+      </button>
+      <button data-scr="trends" onclick="go('trends')">
+        <svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Trends
+      </button>
+      <button data-scr="diary" onclick="go('diary')">
+        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Diary
+      </button>
+      <button data-scr="id" onclick="go('id')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M13 9h5M13 13h5M5.5 16.5c.8-1.2 1.8-1.8 3-1.8s2.2.6 3 1.8"/></svg>ID
+      </button>
+    </nav>
+  </main>
 </div>
 
+<!-- ===== AI assistant ===== -->
+<button class="ai-fab has-invite" id="aifab" aria-label="Open CliniSync Assistant" onclick="toggleChat(true)">
+  <svg viewBox="0 0 24 24"><path d="M12 2l1.7 5.1a2 2 0 0 0 1.2 1.2L20 10l-5.1 1.7a2 2 0 0 0-1.2 1.2L12 18l-1.7-5.1a2 2 0 0 0-1.2-1.2L4 10l5.1-1.7a2 2 0 0 0 1.2-1.2z"/><circle cx="19" cy="18.5" r="2.6"/></svg>
+  <span class="badge"></span>
+</button>
+
+<div class="ai-invite" id="invite" role="status" onclick="acceptInvite()">
+  <span class="x" onclick="dismissInvite(event)">✕</span>
+  <b>✦ CliniSync Assistant</b>
+  <span id="invite-text">Hi Diya! I can explain your recent results in plain language. Want to chat?</span>
+</div>
+
+<div class="chat" id="chat" role="dialog" aria-label="CliniSync Assistant">
+  <div class="chat-head">
+    <div class="logo"><svg viewBox="0 0 24 24"><path d="M12 2l1.7 5.1a2 2 0 0 0 1.2 1.2L20 10l-5.1 1.7a2 2 0 0 0-1.2 1.2L12 18l-1.7-5.1a2 2 0 0 0-1.2-1.2L4 10l5.1-1.7a2 2 0 0 0 1.2-1.2z"/></svg></div>
+    <div>
+      <h3>CliniSync Assistant</h3>
+      <div class="st">Online · here to help</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat(false)" aria-label="Close chat">✕</button>
+  </div>
+  <div class="chat-body" id="chatbody">
+    <div class="msg bot">Hi Diya 👋 I'm your CliniSync Assistant. I can explain your results, remind you what your doctor said, or help you prepare for appointments.
+
+I don't give diagnoses — for medical decisions, your care team is always the right place.</div>
+  </div>
+  <div class="sugg" id="sugg">
+    <button onclick="quickAsk(this)">Explain my HbA1c result</button>
+    <button onclick="quickAsk(this)">What is metformin for?</button>
+    <button onclick="quickAsk(this)">Prepare me for my next appointment</button>
+  </div>
+  <div class="chat-note">CliniSync Assistant explains and organizes — it doesn't diagnose or replace your care team.</div>
+  <div class="chat-input">
+    <input type="text" id="chatinput" placeholder="Ask about your health record…" onkeydown="if(event.key==='Enter')sendMsg()">
+    <button onclick="sendMsg()" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M3 11.5L21 3l-8.5 18-2.4-7.1z"/></svg></button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-// ---------- navigation ----------
+/* ================= navigation ================= */
 function go(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('scr-'+name).classList.add('active');
-  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active', b.dataset.scr===name));
-  document.querySelector('.screens').scrollTo({top:0});
+  document.querySelectorAll('[data-scr]').forEach(b=>b.classList.toggle('active', b.dataset.scr===name));
+  window.scrollTo({top:0});
+  if(name==='trends' && !state.trendInviteShown && !state.chatOpen){
+    state.trendInviteShown=true;
+    showInvite("I noticed your HbA1c is trending up. Want me to explain what that means?",600);
+  }
 }
 
-// ---------- toast ----------
+/* ================= toast ================= */
 let toastTimer;
 function toast(msg){
   const t=document.getElementById('toast');
@@ -532,7 +629,7 @@ function toast(msg){
   toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
 }
 
-// ---------- medication check ----------
+/* ================= meds ================= */
 document.querySelectorAll('.med-check').forEach(c=>{
   const tap=()=>{
     c.classList.toggle('done');
@@ -544,7 +641,7 @@ document.querySelectorAll('.med-check').forEach(c=>{
   c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tap();}});
 });
 
-// ---------- severity picker ----------
+/* ================= diary ================= */
 let sev=3;
 document.querySelectorAll('.sev-btn').forEach(b=>{
   b.addEventListener('click',()=>{
@@ -552,8 +649,6 @@ document.querySelectorAll('.sev-btn').forEach(b=>{
     b.classList.add('sel');sev=+b.dataset.v;
   });
 });
-
-// ---------- add diary entry ----------
 function addEntry(){
   const sym=document.getElementById('sym').value;
   const note=document.getElementById('note').value.trim();
@@ -563,9 +658,7 @@ function addEntry(){
   let h=now.getHours(),m=String(now.getMinutes()).padStart(2,'0');
   const ap=h>=12?'PM':'AM';h=h%12||12;
   let dots='';
-  for(let i=1;i<=5;i++){
-    dots+='<span class="sev-dot'+(i<=sev?(' on'+(sev>=4?' hi':'')):'')+'"></span>';
-  }
+  for(let i=1;i<=5;i++){dots+='<span class="sev-dot'+(i<=sev?(' on'+(sev>=4?' hi':'')):'')+'"></span>';}
   const card=document.createElement('div');
   card.className='card entry';
   card.innerHTML='<div class="entry-sev">'+dots+'</div><div><h3>'+sym+
@@ -578,7 +671,7 @@ function addEntry(){
   toast('Entry saved — visible in your trends');
 }
 
-// ---------- decorative deterministic QR pattern ----------
+/* ================= QR pattern (decorative) ================= */
 (function(){
   const svg=document.getElementById('qrsvg');
   const n=29;let seed=73;
@@ -597,6 +690,147 @@ function addEntry(){
   finder(0,0);finder(n-7,0);finder(0,n-7);
   svg.innerHTML=cells;
 })();
+
+/* ================================================== */
+/* ============ CliniSync AI Assistant ============== */
+/* ================================================== */
+const state={chatOpen:false,inviteTimer:null,trendInviteShown:false,history:[]};
+
+/* ---- patient context handed to the AI (demo data) ---- */
+const PATIENT_CONTEXT=`Patient: Diya, 47, female, Accra, Ghana.
+Conditions: Type 2 diabetes, hypertension. Allergies: penicillin. Blood group O+.
+Medications: Metformin 1000mg twice daily (recently increased from 500mg), Atorvastatin 20mg nightly.
+Recent labs: HbA1c 7.4% (target ≤7.0%, rising from 6.8% in January), LDL 2.1 mmol/L (down 18% on atorvastatin).
+Recent events: Diabetes review 28 Jun with Dr. Mensah at Korle-Bu (metformin increased, fatigue discussed), normal eye screening 14 May.
+Next appointment: Endocrinology review, 9 Oct, 10:30 AM, Dr. Mensah.
+Recent symptom diary: fatigue 4/5, increased thirst 3/5, mild headaches.`;
+
+const SYSTEM_PROMPT=`You are CliniSync Assistant, a friendly in-app helper inside the CliniSync patient platform. You help the patient understand their own health record in plain, warm, simple language.
+
+Rules you must always follow:
+- NEVER diagnose, never suggest what condition symptoms might indicate, never recommend starting/stopping/changing medication doses.
+- For any medical decision, new/worsening symptom, or anything urgent, warmly direct the patient to their care team (Dr. Mensah) or emergency services.
+- Only discuss the patient's own record and general health education. Keep answers short: 2-5 sentences, conversational, no markdown headers.
+- Refer to the patient by name (Diya) occasionally.
+
+Patient record you can reference:
+${PATIENT_CONTEXT}
+
+Respond with plain text only.`;
+
+/* ---- scripted fallback (works offline / when no AI backend is connected) ---- */
+function fallbackReply(q){
+  q=q.toLowerCase();
+  if(/hba1c|a1c|blood sugar|glucose|7\.4/.test(q))
+    return "HbA1c shows your average blood sugar over the past 2–3 months. Yours is 7.4%, a little above your 7.0% target — that's why Dr. Mensah increased your metformin. It's a nudge, not an emergency, and you'll recheck it before your October review. 💚";
+  if(/metformin/.test(q))
+    return "Metformin helps your body use insulin better and lowers the amount of sugar your liver releases — it's the most common first medicine for type 2 diabetes. Yours was recently increased to 1000 mg twice daily, taken with food to be gentle on your stomach. Any side effects worth mentioning? Note them in your diary so Dr. Mensah sees them.";
+  if(/appointment|october|prepare|visit/.test(q))
+    return "Your next visit is 9 October, 10:30 AM with Dr. Mensah at Korle-Bu. To prepare: repeat your HbA1c blood test beforehand, keep logging your fatigue in the diary, and jot down any questions. I'll remind you the week before — and I've already flagged your fatigue pattern for Dr. Mensah to review.";
+  if(/fatigue|tired/.test(q))
+    return "I can see fatigue has come up often in your diary lately — most recently 4/5 on Monday. I've made sure this pattern is flagged for Dr. Mensah ahead of your review. If it suddenly gets much worse, please contact your care team rather than waiting for October.";
+  if(/cholesterol|ldl|atorvastatin|statin/.test(q))
+    return "Good news here, Diya — your LDL cholesterol is down 18% since you started atorvastatin, now at 2.1 mmol/L. That medicine works best taken consistently at night, which is why it's scheduled for 21:30 in your reminders.";
+  if(/thirst|water/.test(q))
+    return "You logged increased thirst recently — thanks for tracking that. It's exactly the kind of detail your care team wants to see alongside your lab results, so it's already in the summary Dr. Mensah will review. If it becomes severe or sudden, contact your clinic sooner.";
+  if(/emergency|urgent|chest|breath/.test(q))
+    return "If this is an emergency, please call emergency services or go to the nearest hospital right away — don't wait. Your CliniSync emergency ID (in the ID tab) lets responders see your critical info instantly.";
+  if(/hello|hi |hey|good morning|how are/.test(q))
+    return "Hello Diya! 😊 I'm here to help you make sense of your health record. You can ask me about your results, your medicines, or your upcoming appointment.";
+  return "That's a good question. I can explain anything in your record — your results, medicines, appointments, or symptom patterns. For medical advice or decisions though, Dr. Mensah and your care team are the right people, and I can help you prepare questions for them. What would you like to look at?";
+}
+
+/* ---- AI call: tries live model, falls back to scripted demo ---- */
+async function getReply(userText){
+  state.history.push({role:"user",content:userText});
+  try{
+    const r=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-6",
+        max_tokens:1000,
+        system:SYSTEM_PROMPT,
+        messages:state.history
+      })
+    });
+    if(!r.ok)throw new Error("api "+r.status);
+    const data=await r.json();
+    const text=(data.content||[]).map(b=>b.type==="text"?b.text:"").join("").trim();
+    if(!text)throw new Error("empty");
+    state.history.push({role:"assistant",content:text});
+    return text;
+  }catch(e){
+    const text=fallbackReply(userText);
+    state.history.push({role:"assistant",content:text});
+    return text;
+  }
+}
+
+/* ---- chat UI ---- */
+function toggleChat(open){
+  state.chatOpen=open;
+  document.getElementById('chat').classList.toggle('open',open);
+  document.getElementById('aifab').style.display=open&&window.innerWidth<1024?'none':'flex';
+  if(open){
+    hideInvite();
+    document.getElementById('aifab').classList.remove('has-invite');
+    setTimeout(()=>document.getElementById('chatinput').focus(),320);
+  }
+}
+function pushMsg(text,who){
+  const b=document.getElementById('chatbody');
+  const d=document.createElement('div');
+  d.className='msg '+who;
+  d.textContent=text;
+  b.appendChild(d);
+  b.scrollTop=b.scrollHeight;
+  return d;
+}
+function typingOn(){
+  const b=document.getElementById('chatbody');
+  const d=document.createElement('div');
+  d.className='msg bot typing';d.id='typing';
+  d.innerHTML='<i></i><i></i><i></i>';
+  b.appendChild(d);b.scrollTop=b.scrollHeight;
+}
+function typingOff(){const t=document.getElementById('typing');if(t)t.remove();}
+async function sendMsg(){
+  const inp=document.getElementById('chatinput');
+  const text=inp.value.trim();
+  if(!text)return;
+  inp.value='';
+  document.getElementById('sugg').style.display='none';
+  pushMsg(text,'user');
+  typingOn();
+  const reply=await getReply(text);
+  await new Promise(r=>setTimeout(r,400+Math.random()*500));
+  typingOff();
+  pushMsg(reply,'bot');
+}
+function quickAsk(btn){
+  document.getElementById('chatinput').value=btn.textContent;
+  sendMsg();
+}
+
+/* ---- self-inviting behaviour ---- */
+function showInvite(text,delay){
+  clearTimeout(state.inviteTimer);
+  state.inviteTimer=setTimeout(()=>{
+    if(state.chatOpen)return;
+    document.getElementById('invite-text').textContent=text;
+    document.getElementById('invite').classList.add('show');
+    document.getElementById('aifab').classList.add('has-invite');
+    clearTimeout(state.hideTimer);
+    state.hideTimer=setTimeout(hideInvite,9000);
+  },delay);
+}
+function hideInvite(){document.getElementById('invite').classList.remove('show');}
+function dismissInvite(e){e.stopPropagation();hideInvite();}
+function acceptInvite(){toggleChat(true);}
+
+/* first self-invite shortly after arrival */
+showInvite("Hi Diya! I can explain your recent results in plain language. Want to chat?",3800);
 </script>
 </body>
 </html>
