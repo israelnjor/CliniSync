@@ -251,6 +251,85 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
 .event.is-insight p{font-size:12.5px;line-height:1.55;color:#3E3880;margin-top:2px}
 .event.hidden{display:none}
 
+/* ================= CliniSync Band — vision preview ================= */
+.vision{
+  margin-top:34px;padding-top:28px;border-top:1px solid var(--line);
+  opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease;
+}
+.vision.seen{opacity:1;transform:none}
+.vision-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.vision-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  padding:6px 12px;border-radius:999px;color:#fff;
+  background:linear-gradient(120deg,var(--ai),var(--pine));
+}
+.band-stage{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  padding:30px 0 10px;
+}
+.band-wrap{
+  position:relative;width:min(300px,80%);
+  animation:bandFloat 6s ease-in-out infinite;
+  transition:filter .4s ease;cursor:default;
+}
+.band-wrap:hover{filter:drop-shadow(0 0 22px rgba(93,83,199,.35))}
+.band-wrap svg{width:100%;height:auto;display:block}
+@keyframes bandFloat{
+  0%,100%{transform:translateY(0) rotate(-1.2deg)}
+  50%{transform:translateY(-12px) rotate(1.2deg)}
+}
+.band-shadow{
+  width:min(220px,60%);height:18px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(19,50,44,.18),transparent 70%);
+  margin:-4px auto 0;
+  animation:shadowPulse 6s ease-in-out infinite;
+}
+@keyframes shadowPulse{
+  0%,100%{transform:scaleX(1);opacity:.9}
+  50%{transform:scaleX(.82);opacity:.55}
+}
+.vision h2{margin-top:20px}
+.vision .lede{margin:8px 0 18px}
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
+.cap{
+  display:flex;align-items:center;gap:9px;
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:11px 13px;font-size:12.5px;font-weight:600;
+}
+.cap .ic{font-size:17px;flex-shrink:0}
+.vision-info{border:1px solid #DDD9F5;background:linear-gradient(180deg,#FBFAFF,#F3F1FC)}
+.vision-info b{font-size:13.5px}
+.vision-info p{font-size:12.5px;line-height:1.55;color:var(--ink-soft);margin:7px 0 13px}
+.vision-info .btn{background:linear-gradient(120deg,var(--ai),var(--ai-deep))}
+
+/* vision modal */
+.vmodal{
+  position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;
+  background:rgba(13,31,27,.5);backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transition:opacity .25s ease;padding:20px;
+}
+.vmodal.open{opacity:1;pointer-events:auto}
+.vmodal-card{
+  background:#fff;border-radius:22px;max-width:440px;width:100%;
+  max-height:84dvh;overflow-y:auto;padding:24px 22px;
+  transform:translateY(12px) scale(.98);transition:transform .25s ease;
+}
+.vmodal.open .vmodal-card{transform:none}
+.vmodal-card h3{font-family:var(--font-display);font-size:20px;font-weight:700;margin:8px 0 4px}
+.vphase{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+.vphase:last-of-type{border-bottom:none}
+.vphase .n{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-data);font-size:12px;font-weight:600;
+  background:var(--pine-soft);color:var(--pine);
+}
+.vphase.future .n{background:var(--ai-soft);color:var(--ai)}
+.vphase b{font-size:13.5px;display:block;margin-bottom:3px}
+.vphase p{font-size:12.5px;line-height:1.5;color:var(--ink-soft)}
+.vmodal-note{font-size:11px;color:var(--ink-soft);line-height:1.5;margin-top:14px;border-left:3px solid var(--line);padding-left:10px}
+
 /* ================= desktop ================= */
 @media (min-width:1024px){
   .sidenav{
@@ -285,6 +364,8 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
     border-radius:22px;border:1px solid #E6E3F6;overflow:hidden;
     box-shadow:0 28px 70px rgba(19,50,44,.25);
   }
+  .cap-grid{grid-template-columns:repeat(3,1fr)}
+  .vision{max-width:760px}
 }
 </style>
 </head>
@@ -300,7 +381,7 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
     <button data-scr="trends" onclick="go('trends')"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Trends</button>
     <button data-scr="diary" onclick="go('diary')"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Symptom diary</button>
     <button data-scr="id" onclick="go('id')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M13 9h5M13 13h5M5.5 16.5c.8-1.2 1.8-1.8 3-1.8s2.2.6 3 1.8"/></svg>Emergency ID</button>
-    <div class="side-foot">Diya Unadkat · Patient<br>CliniSync prototype v2</div>
+    <div class="side-foot">Ama Owusu · Patient<br>CliniSync prototype v2</div>
   </aside>
 
   <main class="main">
@@ -311,9 +392,9 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
         <div class="home-head">
           <div>
             <div class="eyebrow">Thursday, 16 July</div>
-            <h1>Good morning,<br>Diya</h1>
+            <h1>Good morning,<br>Ama</h1>
           </div>
-          <div class="avatar">DU</div>
+          <div class="avatar">AO</div>
         </div>
 
         <div class="grid-2">
@@ -596,7 +677,7 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
                 <div class="id-brand">Clini<span>Sync</span></div>
                 <span style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;font-weight:600">Medical ID</span>
               </div>
-              <div class="id-name">Diya Unadkat</div>
+              <div class="id-name">Ama Owusu</div>
               <div class="id-sub">Born 12 Mar 1979 · 47 yrs · Female</div>
               <div class="id-grid">
                 <div class="id-field"><div class="k">Blood group</div><div class="v data">O+</div></div>
@@ -621,6 +702,104 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
               <p class="muted" style="margin-top:6px">Full records stay encrypted and are shared only with providers you approve. You can revoke access at any time.</p>
             </div>
             <button class="btn ghost" onclick="toast('Card sent to print queue')">Print physical ID card</button>
+          </div>
+        </div>
+
+        <!-- ===== CliniSync Band — future vision (not an MVP feature) ===== -->
+        <div class="vision" id="vision">
+          <div class="vision-head">
+            <span class="vision-badge">✦ Vision preview</span>
+            <span class="muted" style="font-size:11.5px">Future roadmap · not available today</span>
+          </div>
+          <h2 style="margin-top:14px">CliniSync Band</h2>
+          <p class="lede" style="margin-bottom:0"><b style="color:var(--ink)">The future of connected care.</b> CliniSync Band is a future wearable companion designed to securely connect real-time health monitoring with your care journey. It will work alongside CliniSync to provide clinicians and caregivers with richer health insights while supporting patients outside the hospital.</p>
+
+          <div class="band-stage">
+            <div class="band-wrap" aria-label="Concept illustration of the CliniSync Band wearable">
+              <svg viewBox="0 0 340 260" xmlns="http://www.w3.org/2000/svg" role="img">
+                <defs>
+                  <linearGradient id="strap" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#DCE1E3"/>
+                    <stop offset=".5" stop-color="#C3CBCE"/>
+                    <stop offset="1" stop-color="#AEB8BC"/>
+                  </linearGradient>
+                  <linearGradient id="strapIn" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#9AA5A9"/>
+                    <stop offset="1" stop-color="#D5DBDD"/>
+                  </linearGradient>
+                  <linearGradient id="pod" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#FFFFFF"/>
+                    <stop offset=".6" stop-color="#F4F6F5"/>
+                    <stop offset="1" stop-color="#DFE6E4"/>
+                  </linearGradient>
+                  <pattern id="weave" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+                    <rect width="7" height="7" fill="none"/>
+                    <line x1="0" y1="0" x2="0" y2="7" stroke="#8E999D" stroke-width="1.4" opacity=".28"/>
+                  </pattern>
+                  <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+                    <feGaussianBlur stdDeviation="3.2" result="b"/>
+                    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+
+                <!-- fabric strap (torus) -->
+                <g>
+                  <path fill-rule="evenodd" fill="url(#strap)" stroke="#9FABAF" stroke-width="1.4"
+                    d="M170,30 C252,30 314,68 314,120 C314,172 252,210 170,210 C88,210 26,172 26,120 C26,68 88,30 170,30 Z
+                       M170,68 C228,68 272,90 272,120 C272,150 228,172 170,172 C112,172 68,150 68,120 C68,90 112,68 170,68 Z"/>
+                  <!-- woven texture -->
+                  <path fill-rule="evenodd" fill="url(#weave)"
+                    d="M170,30 C252,30 314,68 314,120 C314,172 252,210 170,210 C88,210 26,172 26,120 C26,68 88,30 170,30 Z
+                       M170,68 C228,68 272,90 272,120 C272,150 228,172 170,172 C112,172 68,150 68,120 C68,90 112,68 170,68 Z"/>
+                  <!-- inner wall -->
+                  <ellipse cx="170" cy="120" rx="102" ry="52" fill="none" stroke="url(#strapIn)" stroke-width="8" opacity=".85"/>
+                  <!-- brand accent edge along bottom of strap -->
+                  <path d="M50,152 C86,192 254,192 290,152" fill="none" stroke="#0E6E5C" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+                  <!-- top highlight -->
+                  <path d="M84,74 C112,50 228,50 256,74" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+                  <!-- strap adjuster -->
+                  <rect x="288" y="98" width="9" height="22" rx="3" fill="#B8C1C4" stroke="#98A3A7" stroke-width="1"/>
+                </g>
+
+                <!-- dark inner frame peeking above pod -->
+                <path d="M74,158 C80,140 236,132 250,150 C252,158 250,168 244,172 L82,182 C76,176 72,166 74,158 Z" fill="#4A5457"/>
+
+                <!-- white sensor pod -->
+                <g transform="rotate(-4 160 190)">
+                  <rect x="64" y="152" width="196" height="64" rx="32" fill="url(#pod)" stroke="#C9D3D0" stroke-width="1.4"/>
+                  <!-- pod top highlight -->
+                  <path d="M84,164 C120,156 210,156 242,163" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity=".9"/>
+                  <!-- micro port detail -->
+                  <rect x="150" y="158" width="22" height="3.4" rx="1.7" fill="#B9C3C0"/>
+                  <!-- engraved wordmark -->
+                  <text x="92" y="192" font-family="Bricolage Grotesque,sans-serif" font-size="11" font-weight="600" fill="#B6C1BD" letter-spacing="1.5">CLINISYNC</text>
+                  <!-- glowing ECG -->
+                  <polyline points="176,190 192,190 200,177 208,202 216,183 222,190 240,190"
+                    fill="none" stroke="#17B08D" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+                  <!-- status LED -->
+                  <circle cx="248" cy="190" r="3.2" fill="#5D53C7">
+                    <animate attributeName="opacity" values="1;.25;1" dur="2.6s" repeatCount="indefinite"/>
+                  </circle>
+                </g>
+              </svg>
+            </div>
+          </div>
+          <div class="band-shadow"></div>
+
+          <h2 style="font-size:14px;margin:24px 0 10px">Planned capabilities</h2>
+          <div class="cap-grid">
+            <div class="cap"><span class="ic">❤️</span>Heart rate</div>
+            <div class="cap"><span class="ic">🩸</span>Blood oxygen (SpO₂)</div>
+            <div class="cap"><span class="ic">🚶</span>Fall detection</div>
+            <div class="cap"><span class="ic">📍</span>Emergency alerts</div>
+            <div class="cap"><span class="ic">🤖</span>AI health insights</div>
+            <div class="cap"><span class="ic">🔗</span>Seamless CliniSync integration</div>
+          </div>
+
+          <div class="card vision-info">
+            <b>Designed for the next phase of CliniSync</b>
+            <p>While today's MVP focuses on AI-powered care coordination, future versions will support connected health wearables that securely stream health signals into the patient's longitudinal health timeline, helping clinicians make more informed decisions.</p>
+            <button class="btn" onclick="openVision()">Explore future vision →</button>
           </div>
         </div>
       </section>
@@ -657,7 +836,7 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
 <div class="ai-invite" id="invite" role="status" onclick="acceptInvite()">
   <span class="x" onclick="dismissInvite(event)">✕</span>
   <b>✦ CliniSync Assistant</b>
-  <span id="invite-text">Hi Diya! I can explain your recent results in plain language. Want to chat?</span>
+  <span id="invite-text">Hi Ama! I can explain your recent results in plain language. Want to chat?</span>
 </div>
 
 <div class="chat" id="chat" role="dialog" aria-label="CliniSync Assistant">
@@ -670,7 +849,7 @@ h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:26px 0 
     <button class="chat-close" onclick="toggleChat(false)" aria-label="Close chat">✕</button>
   </div>
   <div class="chat-body" id="chatbody">
-    <div class="msg bot">Hi Diya 👋 I'm your CliniSync Assistant. I can explain your results, remind you what your doctor said, or help you prepare for appointments.
+    <div class="msg bot">Hi Ama 👋 I'm your CliniSync Assistant. I can explain your results, remind you what your doctor said, or help you prepare for appointments.
 
 I don't give diagnoses — for medical decisions, your care team is always the right place.</div>
   </div>
@@ -683,6 +862,32 @@ I don't give diagnoses — for medical decisions, your care team is always the r
   <div class="chat-input">
     <input type="text" id="chatinput" placeholder="Ask about your health record…" onkeydown="if(event.key==='Enter')sendMsg()">
     <button onclick="sendMsg()" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M3 11.5L21 3l-8.5 18-2.4-7.1z"/></svg></button>
+  </div>
+</div>
+
+<!-- ===== vision modal (informational only) ===== -->
+<div class="vmodal" id="vmodal" role="dialog" aria-label="CliniSync future vision" onclick="if(event.target===this)closeVision()">
+  <div class="vmodal-card">
+    <span class="vision-badge">✦ Vision preview</span>
+    <h3>Where CliniSync is heading</h3>
+    <p class="muted" style="margin-bottom:8px">A connected healthcare ecosystem, built in phases.</p>
+    <div class="vphase">
+      <div class="n">1</div>
+      <div><b>Today — AI care coordination</b>
+      <p>Unified timeline, AI summaries, symptom diary, lab trends, and the emergency Digital Health ID. This is the MVP you're using now.</p></div>
+    </div>
+    <div class="vphase future">
+      <div class="n">2</div>
+      <div><b>Next — connected wearables</b>
+      <p>CliniSync Band securely streams signals like heart rate and SpO₂ into your longitudinal timeline, with your consent controlling every data flow.</p></div>
+    </div>
+    <div class="vphase future">
+      <div class="n">3</div>
+      <div><b>Later — proactive care</b>
+      <p>Fall detection and emergency alerts reach caregivers instantly, while AI surfaces meaningful patterns for clinicians — never diagnosing, always supporting.</p></div>
+    </div>
+    <div class="vmodal-note">CliniSync Band is a design concept on our future roadmap. It is not an available product, and nothing can be ordered or purchased.</div>
+    <button class="btn ghost" style="margin-top:16px" onclick="closeVision()">Close</button>
   </div>
 </div>
 
@@ -808,7 +1013,7 @@ function addEntry(){
 const state={chatOpen:false,inviteTimer:null,trendInviteShown:false,history:[]};
 
 /* ---- patient context handed to the AI (demo data) ---- */
-const PATIENT_CONTEXT=`Patient: Diya, 47, female, Accra, Ghana.
+const PATIENT_CONTEXT=`Patient: Ama Owusu, 47, female, Accra, Ghana.
 Conditions: Type 2 diabetes, hypertension. Allergies: penicillin. Blood group O+.
 Medications: Metformin 1000mg twice daily (recently increased from 500mg), Atorvastatin 20mg nightly.
 Recent labs: HbA1c 7.4% (target ≤7.0%, rising from 6.8% in January), LDL 2.1 mmol/L (down 18% on atorvastatin).
@@ -822,7 +1027,7 @@ Rules you must always follow:
 - NEVER diagnose, never suggest what condition symptoms might indicate, never recommend starting/stopping/changing medication doses.
 - For any medical decision, new/worsening symptom, or anything urgent, warmly direct the patient to their care team (Dr. Mensah) or emergency services.
 - Only discuss the patient's own record and general health education. Keep answers short: 2-5 sentences, conversational, no markdown headers.
-- Refer to the patient by name (Diya) occasionally.
+- Refer to the patient by name (Ama) occasionally.
 
 Patient record you can reference:
 ${PATIENT_CONTEXT}
@@ -858,7 +1063,7 @@ const FOLLOWUPS={
 };
 
 const DEFAULTS=[
-  "I can help with anything in your record, Diya — your results, medicines, appointments, or symptom patterns. What would you like to look at?",
+  "I can help with anything in your record, Ama — your results, medicines, appointments, or symptom patterns. What would you like to look at?",
   "I'm not sure I caught that. Try asking me something like \"explain my HbA1c\" or \"what did the doctor say last visit?\"",
   "Hmm, I want to make sure I'm actually helpful — could you tell me a bit more about what you'd like to know? I know your results, medicines and appointments inside out."
 ];
@@ -875,7 +1080,7 @@ function fallbackReply(q){
   /* --- polite endings --- */
   if(/^(no|nope|naa|nah|not now|i'?m (good|fine|ok))\.?$/.test(q)){
     lastTopic=null;
-    return "No problem at all, Diya 😊 I'm right here whenever you need me — just tap the ✦ button.";
+    return "No problem at all, Ama 😊 I'm right here whenever you need me — just tap the ✦ button.";
   }
   if(/thank|thanks|medaase/.test(q)){
     lastTopic=null;
@@ -905,7 +1110,7 @@ function fallbackReply(q){
   }
   if(/cholesterol|ldl|atorvastatin|statin/.test(q)){
     lastTopic=null;
-    return "Good news here, Diya — your LDL cholesterol is down 18% since you started atorvastatin, now at 2.1 mmol/L. That medicine works best taken consistently at night, which is why it's scheduled for 21:30 in your reminders.";
+    return "Good news here, Ama — your LDL cholesterol is down 18% since you started atorvastatin, now at 2.1 mmol/L. That medicine works best taken consistently at night, which is why it's scheduled for 21:30 in your reminders.";
   }
   if(/thirst|water/.test(q)){
     lastTopic=null;
@@ -917,7 +1122,7 @@ function fallbackReply(q){
   }
   if(/^(hello|hi|hey|good morning|good afternoon|how are you)\b/.test(q)){
     lastTopic=null;
-    return "Hello Diya! 😊 I'm here to help you make sense of your health record. You can ask me about your results, your medicines, or your upcoming appointment.";
+    return "Hello Ama! 😊 I'm here to help you make sense of your health record. You can ask me about your results, your medicines, or your upcoming appointment.";
   }
 
   /* --- rotating default, never the same twice in a row --- */
@@ -1015,8 +1220,22 @@ function hideInvite(){document.getElementById('invite').classList.remove('show')
 function dismissInvite(e){e.stopPropagation();hideInvite();}
 function acceptInvite(){toggleChat(true);}
 
+/* ================= vision modal & reveal ================= */
+function openVision(){document.getElementById('vmodal').classList.add('open');}
+function closeVision(){document.getElementById('vmodal').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeVision();});
+(function(){
+  const v=document.getElementById('vision');
+  if(!v)return;
+  if(!('IntersectionObserver' in window)){v.classList.add('seen');return;}
+  const io=new IntersectionObserver(es=>{
+    es.forEach(en=>{if(en.isIntersecting){v.classList.add('seen');io.disconnect();}});
+  },{threshold:.15});
+  io.observe(v);
+})();
+
 /* first self-invite shortly after arrival */
-showInvite("Hi Diya! I can explain your recent results in plain language. Want to chat?",3800);
+showInvite("Hi Ama! I can explain your recent results in plain language. Want to chat?",3800);
 </script>
 </body>
 </html>
